@@ -71,7 +71,7 @@
 
     <div class="scorecard-panel">
       <div class="kicker" style="margin-bottom:10px">This month's scorecard</div>
-      <p class="panel-note" id="mo-scorecard-note"></p>
+      <div class="health-score" id="mo-health"></div>
       <table class="panel-scorecard" id="t-scorecard"><tbody></tbody></table>
     </div>
   </div>
@@ -308,9 +308,13 @@
     { metric: "Footwear days on hand", target: "≤ 60 days", actual: `${footwear.daysOnHand} days`, delta: "+3 days vs Jul", status: "behind" },
     { metric: "Allentown overtime", target: "≤ 8.0%", actual: `${allentown.overtimePct.toFixed(1)}%`, delta: "+0.4pt vs Jul", status: "behind" },
   ];
-  const moBehind = SCORECARD.filter(r => r.status !== "good").length;
-  document.getElementById("mo-scorecard-note").innerHTML =
-    `<strong>${SCORECARD.length - moBehind} of ${SCORECARD.length}</strong> on track this month.`;
+  const moOnTrack = SCORECARD.filter(r => r.status === "good").length;
+  const moHealth = Charts.healthScore(SCORECARD.map(r => r.status));
+  const moHealthEl = document.getElementById("mo-health");
+  moHealthEl.className = `health-score ${moHealth.level}`;
+  moHealthEl.innerHTML = `<span class="dot"></span>
+    <div><div class="hs-label">${moHealth.label}</div>
+    <div class="hs-sub">${moOnTrack} of ${SCORECARD.length} metrics on track this month</div></div>`;
   document.querySelector("#t-scorecard tbody").innerHTML = SCORECARD.map(r => `
     <tr>
       <td><span class="m-name">${r.metric}</span><span class="m-target">Target: ${r.target}</span></td>

@@ -273,8 +273,17 @@ a.card-link .go { color: var(--accent); font-size: .88rem; font-weight: 600; mar
   background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
   padding: 22px 24px; display: flex; flex-direction: column;
 }
-.scorecard-panel .panel-note { font-size: .82rem; color: var(--ink-2); margin: 0 0 14px; }
-.scorecard-panel .panel-note strong { color: var(--ink); }
+.health-score {
+  display: flex; align-items: center; gap: 12px;
+  padding-bottom: 14px; margin-bottom: 14px; border-bottom: 1px solid var(--grid);
+}
+.health-score .dot { width: 15px; height: 15px; border-radius: 50%; flex: 0 0 15px; }
+.health-score.healthy .dot { background: var(--status-good); }
+.health-score.neutral .dot { background: var(--muted); }
+.health-score.soft .dot { background: var(--status-warning); }
+.health-score .hs-label { font-size: 1.12rem; font-weight: 700; color: var(--ink); line-height: 1.2; }
+.health-score .hs-sub { font-size: .78rem; color: var(--ink-2); margin-top: 2px; }
+
 .panel-scorecard { width: 100%; border-collapse: collapse; font-size: .85rem; }
 .panel-scorecard td { padding: 9px 0; border-bottom: 1px solid var(--grid); vertical-align: top; }
 .panel-scorecard tr:last-child td { border-bottom: 0; }

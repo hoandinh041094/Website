@@ -324,5 +324,14 @@ const Charts = (() => {
     return `<span class="rag ${status}"><span class="dot"></span>${label}</span>`;
   }
 
-  return { lineChart, barChart, heatmap, statTile, sparkSVG, fmtCompact, fmtFull, css, slot, ragBadge };
+  // composite health score from a scorecard's RAG statuses — healthy | neutral | soft
+  function healthScore(statuses) {
+    const weight = { good: 1, watch: 0.6, behind: 0.2 };
+    const score = statuses.reduce((a, s) => a + (weight[s] ?? 0), 0) / statuses.length;
+    const level = score >= 0.8 ? "healthy" : score >= 0.55 ? "neutral" : "soft";
+    const label = { healthy: "Healthy", neutral: "Neutral", soft: "Soft" }[level];
+    return { level, label, score };
+  }
+
+  return { lineChart, barChart, heatmap, statTile, sparkSVG, fmtCompact, fmtFull, css, slot, ragBadge, healthScore };
 })();

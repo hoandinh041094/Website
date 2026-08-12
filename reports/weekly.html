@@ -67,7 +67,7 @@
 
     <div class="scorecard-panel">
       <div class="kicker" style="margin-bottom:10px">This week's scorecard</div>
-      <p class="panel-note" id="wk-scorecard-note"></p>
+      <div class="health-score" id="wk-health"></div>
       <table class="panel-scorecard" id="t-wk-scorecard"><tbody></tbody></table>
     </div>
   </div>
@@ -264,9 +264,13 @@
     { metric: "East region revenue", target: "≥ +1.5% WoW", actual: "$104K", delta: `+${wow(W.revenueByRegion.East).toFixed(1)}% WoW`, status: "behind" },
     { metric: "Paid social CAC", target: "≤ $25.00", actual: `$${paidCac.toFixed(2)}`, delta: "up 3 weeks running", status: "watch" },
   ];
-  const wkBehind = WK_SCORECARD.filter(r => r.status !== "good").length;
-  document.getElementById("wk-scorecard-note").innerHTML =
-    `<strong>${WK_SCORECARD.length - wkBehind} of ${WK_SCORECARD.length}</strong> on track this week.`;
+  const wkOnTrack = WK_SCORECARD.filter(r => r.status === "good").length;
+  const wkHealth = Charts.healthScore(WK_SCORECARD.map(r => r.status));
+  const wkHealthEl = document.getElementById("wk-health");
+  wkHealthEl.className = `health-score ${wkHealth.level}`;
+  wkHealthEl.innerHTML = `<span class="dot"></span>
+    <div><div class="hs-label">${wkHealth.label}</div>
+    <div class="hs-sub">${wkOnTrack} of ${WK_SCORECARD.length} metrics on track this week</div></div>`;
   document.querySelector("#t-wk-scorecard tbody").innerHTML = WK_SCORECARD.map(r => `
     <tr>
       <td><span class="m-name">${r.metric}</span><span class="m-target">Target: ${r.target}</span></td>
