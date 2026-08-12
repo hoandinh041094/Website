@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Finance &amp; Operations Dashboard — Sightcraft Analytics demo</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="nav">
+    <a class="brand" href="../index.html">Sightcraft<span>&nbsp;Analytics</span></a>
+    <nav>
+      <a href="sales.html">Sales</a>
+      <a href="finance.html" class="active">Finance</a>
+      <a href="marketing.html">Marketing</a>
+      <a href="../chatbot.html">AI assistant</a>
+    </nav>
+  </header>
+
+  <div style="padding-top:28px">
+    <div class="kicker">Demo build · Northwind Outfitters (fictional)</div>
+    <div class="report-title">Finance &amp; Operations Dashboard</div>
+    <div class="report-sub">Cash flow, margin &amp; spend controls
+      · Data refreshed nightly from the ERP</div>
+    <div class="rule"></div>
+    <div class="rule-thin"></div>
+  </div>
+
+  <div class="grid grid-4" style="margin:20px 0 16px">
+    <div class="tile" id="t1"></div>
+    <div class="tile" id="t2"></div>
+    <div class="tile" id="t3"></div>
+    <div class="tile" id="t4"></div>
+  </div>
+
+  <div class="grid grid-2" style="margin-bottom:16px">
+    <div class="chart-card">
+      <h3>Cash in vs. cash out</h3>
+      <div class="chart-sub">Monthly, $ thousands</div>
+      <div id="c-cash"></div>
+    </div>
+    <div class="chart-card">
+      <h3>Gross margin</h3>
+      <div class="chart-sub">Percent of revenue, monthly</div>
+      <div id="c-margin"></div>
+    </div>
+  </div>
+
+  <div class="grid grid-2" style="margin-bottom:16px">
+    <div class="chart-card">
+      <h3>Operating expenses by department</h3>
+      <div class="chart-sub">Monthly, $ thousands, stacked</div>
+      <div id="c-opex"></div>
+    </div>
+    <div class="chart-card">
+      <h3>Accounts receivable aging</h3>
+      <div class="chart-sub">Outstanding balance by bucket</div>
+      <div id="c-ar"></div>
+      <div class="table-scroll" style="margin-top:10px">
+        <table class="data-table" id="t-ar">
+          <thead><tr><th>Bucket</th><th class="num">Amount</th><th class="num">Share</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="foot-grid">
+      <div>Demo dashboard — all data fictional. <a href="../index.html#contact">Want one with your data?</a></div>
+      <div>© 2026 Sightcraft Analytics</div>
+    </div>
+  </footer>
+
+</div>
+
+<script src="../assets/charts.js"></script>
+<script src="../assets/data.js"></script>
+<script>
+  const F = DATA.finance;
+  const months = DATA.months;
+
+  const net = F.cashIn.map((v, i) => v - F.cashOut[i]);
+  Charts.statTile(document.getElementById("t1"), {
+    label: "Net cash flow (Aug)", value: "$192K",
+    delta: 4.3, deltaLabel: "vs Jul", spark: net });
+  Charts.statTile(document.getElementById("t2"), {
+    label: "Gross margin (Aug)", value: "44.2%",
+    delta: 0.4, deltaLabel: "vs Jul", spark: F.grossMarginPct });
+  Charts.statTile(document.getElementById("t3"), {
+    label: "Opex (Aug)", value: "$729K", delta: 2.0, upIsGood: false, deltaLabel: "vs Jul",
+    spark: months.map((_, i) => Object.values(F.opexByDept).reduce((a, s) => a + s[i], 0)) });
+  Charts.statTile(document.getElementById("t4"), {
+    label: "AR past 60 days", value: "$48.3K", delta: -8.6, upIsGood: false,
+    deltaLabel: "vs Jul" });
+
+  Charts.lineChart(document.getElementById("c-cash"), {
+    labels: months, prefix: "$",
+    series: [
+      { name: "Cash in", color: 1, values: F.cashIn },
+      { name: "Cash out", color: 2, values: F.cashOut },
+    ],
+  });
+
+  Charts.lineChart(document.getElementById("c-margin"), {
+    labels: months, areaFill: true,
+    series: [{ name: "Gross margin %", color: 3, values: F.grossMarginPct }],
+  });
+
+  Charts.barChart(document.getElementById("c-opex"), {
+    labels: months, stacked: true, prefix: "$",
+    series: Object.entries(F.opexByDept).map(([name, values], i) =>
+      ({ name, color: i + 1, values })),
+  });
+
+  Charts.barChart(document.getElementById("c-ar"), {
+    labels: F.arAging.map(b => b.bucket), prefix: "$", height: 200,
+    series: [{ name: "Outstanding", color: 1, values: F.arAging.map(b => b.amount / 1000) }],
+  });
+
+  const arTotal = F.arAging.reduce((a, b) => a + b.amount, 0);
+  document.querySelector("#t-ar tbody").innerHTML = F.arAging.map(b => `
+    <tr><td>${b.bucket}</td>
+      <td class="num">$${b.amount.toLocaleString()}</td>
+      <td class="num">${((b.amount / arTotal) * 100).toFixed(1)}%</td></tr>`).join("");
+</script>
+</body>
+</html>

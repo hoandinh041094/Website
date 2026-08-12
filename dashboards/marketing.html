@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marketing Performance Dashboard — Sightcraft Analytics demo</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="nav">
+    <a class="brand" href="../index.html">Sightcraft<span>&nbsp;Analytics</span></a>
+    <nav>
+      <a href="sales.html">Sales</a>
+      <a href="finance.html">Finance</a>
+      <a href="marketing.html" class="active">Marketing</a>
+      <a href="../chatbot.html">AI assistant</a>
+    </nav>
+  </header>
+
+  <div style="padding-top:28px">
+    <div class="kicker">Demo build · Northwind Outfitters (fictional)</div>
+    <div class="report-title">Marketing Performance Dashboard</div>
+    <div class="report-sub">Traffic, funnel &amp; campaign returns
+      · Blends web analytics, ads &amp; email platforms</div>
+    <div class="rule"></div>
+    <div class="rule-thin"></div>
+  </div>
+
+  <div class="grid grid-4" style="margin:20px 0 16px">
+    <div class="tile" id="t1"></div>
+    <div class="tile" id="t2"></div>
+    <div class="tile" id="t3"></div>
+    <div class="tile" id="t4"></div>
+  </div>
+
+  <div class="grid grid-2" style="margin-bottom:16px">
+    <div class="chart-card">
+      <h3>Sessions by channel</h3>
+      <div class="chart-sub">Monthly sessions, thousands</div>
+      <div id="c-channels"></div>
+    </div>
+    <div class="chart-card">
+      <h3>Conversion funnel — August</h3>
+      <div class="chart-sub">Visitors remaining at each stage</div>
+      <div id="c-funnel"></div>
+    </div>
+  </div>
+
+  <div class="grid grid-2" style="margin-bottom:16px">
+    <div class="chart-card">
+      <h3>Conversion rate by day &amp; time</h3>
+      <div class="chart-sub">Percent of sessions converting — darker is higher</div>
+      <div id="c-heat"></div>
+    </div>
+    <div class="chart-card">
+      <h3>Campaign returns — trailing 90 days</h3>
+      <div class="chart-sub">Spend, attributed revenue &amp; ROAS</div>
+      <div class="table-scroll">
+        <table class="data-table" id="t-camp">
+          <thead><tr>
+            <th>Campaign</th><th>Channel</th>
+            <th class="num">Spend</th><th class="num">Revenue</th><th class="num">ROAS</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="foot-grid">
+      <div>Demo dashboard — all data fictional. <a href="../index.html#contact">Want one with your data?</a></div>
+      <div>© 2026 Sightcraft Analytics</div>
+    </div>
+  </footer>
+
+</div>
+
+<script src="../assets/charts.js"></script>
+<script src="../assets/data.js"></script>
+<script>
+  const M = DATA.marketing;
+  const months = DATA.months;
+
+  const totalSessions = months.map((_, i) =>
+    Object.values(M.sessionsByChannel).reduce((a, s) => a + s[i], 0));
+  Charts.statTile(document.getElementById("t1"), {
+    label: "Sessions (Aug)", value: "113.7K", delta: 4.7, deltaLabel: "vs Jul",
+    spark: totalSessions });
+  Charts.statTile(document.getElementById("t2"), {
+    label: "Conversion rate", value: "5.6%", delta: 0.8, deltaLabel: "vs Jul" });
+  Charts.statTile(document.getElementById("t3"), {
+    label: "Blended ROAS", value: "3.4×", delta: 6.1, deltaLabel: "vs prior 90d" });
+  Charts.statTile(document.getElementById("t4"), {
+    label: "Cost per acquisition", value: "$16.20", delta: -5.4, upIsGood: false,
+    deltaLabel: "vs prior 90d" });
+
+  Charts.lineChart(document.getElementById("c-channels"), {
+    labels: months, areaFill: true,
+    series: [
+      { name: "Organic", color: 1, values: M.sessionsByChannel["Organic"] },
+      { name: "Paid", color: 2, values: M.sessionsByChannel["Paid"] },
+      { name: "Email", color: 3, values: M.sessionsByChannel["Email"] },
+    ],
+  });
+
+  Charts.barChart(document.getElementById("c-funnel"), {
+    labels: M.funnel.map(f => f.stage), height: 240,
+    series: [{ name: "Visitors", color: 1, values: M.funnel.map(f => f.value) }],
+  });
+
+  Charts.heatmap(document.getElementById("c-heat"), {
+    rows: M.convHeat.rows, cols: M.convHeat.cols, values: M.convHeat.values,
+    fmt: (v) => v.toFixed(1) + "%",
+  });
+
+  document.querySelector("#t-camp tbody").innerHTML = M.campaigns.map(c => `
+    <tr>
+      <td>${c.name}</td><td>${c.channel}</td>
+      <td class="num">$${c.spend.toLocaleString()}</td>
+      <td class="num">$${c.revenue.toLocaleString()}</td>
+      <td class="num ${c.roas >= 3 ? "pos" : ""}">${c.roas.toFixed(1)}×</td>
+    </tr>`).join("");
+</script>
+</body>
+</html>

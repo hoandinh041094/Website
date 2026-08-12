@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sales &amp; Revenue Dashboard — Sightcraft Analytics demo</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="nav">
+    <a class="brand" href="../index.html">Sightcraft<span>&nbsp;Analytics</span></a>
+    <nav>
+      <a href="sales.html" class="active">Sales</a>
+      <a href="finance.html">Finance</a>
+      <a href="marketing.html">Marketing</a>
+      <a href="../chatbot.html">AI assistant</a>
+    </nav>
+  </header>
+
+  <div style="padding-top:28px">
+    <div class="kicker">Demo build · Northwind Outfitters (fictional)</div>
+    <div class="report-title">Sales &amp; Revenue Dashboard</div>
+    <div class="report-sub">Regional performance, category mix &amp; key accounts
+      · Data refreshed daily at 6:00 AM</div>
+    <div class="rule"></div>
+    <div class="rule-thin"></div>
+  </div>
+
+  <div class="filters">
+    <span class="flabel">Time range</span>
+    <button class="chip" data-range="3">3M</button>
+    <button class="chip" data-range="6">6M</button>
+    <button class="chip active" data-range="12">12M</button>
+  </div>
+
+  <div class="grid grid-4" style="margin-bottom:16px">
+    <div class="tile" id="t1"></div>
+    <div class="tile" id="t2"></div>
+    <div class="tile" id="t3"></div>
+    <div class="tile" id="t4"></div>
+  </div>
+
+  <div class="grid grid-2" style="margin-bottom:16px">
+    <div class="chart-card">
+      <h3>Revenue by region</h3>
+      <div class="chart-sub">Monthly revenue, $ thousands</div>
+      <div id="c-region"></div>
+    </div>
+    <div class="chart-card">
+      <h3>Units sold by category</h3>
+      <div class="chart-sub">Monthly units, stacked</div>
+      <div id="c-category"></div>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <h3>Top accounts — trailing 12 months</h3>
+    <div class="chart-sub">Revenue and year-over-year growth</div>
+    <div class="table-scroll">
+      <table class="data-table" id="t-accounts">
+        <thead><tr>
+          <th>Account</th><th>Region</th>
+          <th class="num">Revenue (T12M)</th><th class="num">YoY growth</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer>
+    <div class="foot-grid">
+      <div>Demo dashboard — all data fictional. <a href="../index.html#contact">Want one with your data?</a></div>
+      <div>© 2026 Sightcraft Analytics</div>
+    </div>
+  </footer>
+
+</div>
+
+<script src="../assets/charts.js"></script>
+<script src="../assets/data.js"></script>
+<script>
+  const S = DATA.sales;
+
+  function renderRange(n) {
+    const cut = (arr) => arr.slice(-n);
+    const months = cut(DATA.months);
+
+    Charts.lineChart(document.getElementById("c-region"), {
+      labels: months, prefix: "$", areaFill: true,
+      series: [
+        { name: "West", color: 1, values: cut(S.revenueByRegion.West) },
+        { name: "East", color: 2, values: cut(S.revenueByRegion.East) },
+        { name: "Central", color: 3, values: cut(S.revenueByRegion.Central) },
+      ],
+    });
+
+    Charts.barChart(document.getElementById("c-category"), {
+      labels: months, stacked: true,
+      series: [
+        { name: "Apparel", color: 1, values: cut(S.unitsByCategory.Apparel) },
+        { name: "Footwear", color: 2, values: cut(S.unitsByCategory.Footwear) },
+        { name: "Accessories", color: 3, values: cut(S.unitsByCategory.Accessories) },
+      ],
+    });
+  }
+
+  // tiles (computed off the full 12 months)
+  const totals = DATA.months.map((_, i) =>
+    Object.values(S.revenueByRegion).reduce((a, s) => a + s[i], 0));
+  const last = totals[totals.length - 1], prev = totals[totals.length - 2];
+  Charts.statTile(document.getElementById("t1"), {
+    label: "Revenue (Aug)", value: "$" + (last / 1000).toFixed(2) + "M",
+    delta: ((last - prev) / prev) * 100, deltaLabel: "vs Jul", spark: totals });
+  Charts.statTile(document.getElementById("t2"), {
+    label: "Units sold (Aug)", value: "5,100", delta: 4.1, deltaLabel: "vs Jul",
+    spark: DATA.months.map((_, i) => Object.values(S.unitsByCategory).reduce((a, s) => a + s[i], 0)) });
+  Charts.statTile(document.getElementById("t3"), {
+    label: "Avg. order value", value: "$272", delta: 1.9, deltaLabel: "vs Jul" });
+  Charts.statTile(document.getElementById("t4"), {
+    label: "New accounts (T12M)", value: "38", delta: 15.2, deltaLabel: "vs prior year" });
+
+  // accounts table
+  document.querySelector("#t-accounts tbody").innerHTML = S.topAccounts.map(a => `
+    <tr>
+      <td>${a.name}</td><td>${a.region}</td>
+      <td class="num">$${a.revenue.toLocaleString()}</td>
+      <td class="num ${a.growth >= 0 ? "pos" : "neg"}">${a.growth >= 0 ? "+" : ""}${a.growth.toFixed(1)}%</td>
+    </tr>`).join("");
+
+  // time-range chips
+  document.querySelectorAll(".chip[data-range]").forEach(ch => {
+    ch.addEventListener("click", () => {
+      document.querySelectorAll(".chip[data-range]").forEach(c => c.classList.remove("active"));
+      ch.classList.add("active");
+      renderRange(+ch.dataset.range);
+    });
+  });
+
+  renderRange(12);
+</script>
+</body>
+</html>

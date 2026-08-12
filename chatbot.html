@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Data Assistant — Sightcraft Analytics demo</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="nav">
+    <a class="brand" href="index.html">Sightcraft<span>&nbsp;Analytics</span></a>
+    <nav>
+      <a href="dashboards/sales.html">Sales</a>
+      <a href="dashboards/finance.html">Finance</a>
+      <a href="dashboards/marketing.html">Marketing</a>
+      <a href="chatbot.html" class="active">AI assistant</a>
+    </nav>
+  </header>
+
+  <div style="padding-top:28px; margin-bottom:20px">
+    <div class="kicker">Demo · Scripted preview</div>
+    <div class="report-title">AI Data Assistant</div>
+    <div class="report-sub">Ask questions about Northwind Outfitters' (fictional)
+      data. In a client build, this assistant is grounded in <em>your</em> live
+      data — this page is a scripted demo of the experience.</div>
+    <div class="rule"></div>
+    <div class="rule-thin"></div>
+  </div>
+
+  <div class="grid" style="grid-template-columns: 1fr 300px; gap:20px; align-items:start">
+    <div class="chat-shell">
+      <div class="chat-log" id="log"></div>
+      <div class="chat-suggest" id="suggest"></div>
+      <div class="chat-input-row">
+        <input id="q" type="text" placeholder="Ask about revenue, regions, margin, forecasts…"
+               autocomplete="off">
+        <button class="btn btn-primary" id="send">Send</button>
+      </div>
+    </div>
+
+    <div>
+      <div class="card" style="margin-bottom:14px">
+        <h3>How the real thing works</h3>
+        <p>A production assistant connects to your warehouse or dashboards,
+        answers only from your data, cites the numbers it used, and refuses to
+        guess. It lives in Slack, Teams, or the dashboard itself.</p>
+      </div>
+      <div class="card">
+        <h3>This demo</h3>
+        <p>Scripted responses over the same fictional dataset powering the demo
+        dashboards — try the suggested questions, or type your own and see how
+        it routes to the closest topic.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="foot-grid">
+      <div>Demo — responses are scripted, data is fictional. <a href="index.html#contact">Ask about a real build</a></div>
+      <div>© 2026 Sightcraft Analytics</div>
+    </div>
+  </footer>
+
+</div>
+
+<script src="assets/charts.js"></script>
+<script src="assets/data.js"></script>
+<script>
+  const log = document.getElementById("log");
+  const suggestBox = document.getElementById("suggest");
+  const input = document.getElementById("q");
+
+  const totals = DATA.months.map((_, i) =>
+    Object.values(DATA.sales.revenueByRegion).reduce((a, s) => a + s[i], 0));
+
+  const ANSWERS = [
+    {
+      keys: ["best month", "highest revenue", "peak"],
+      label: "What was our best month?",
+      html: () => `<strong>December</strong> was the best month of the trailing
+        year at <strong>$1.32M</strong> — 12% above the monthly average, driven by
+        the holiday peak in the West region ($521K). August is the strongest
+        non-holiday month at $1.39M and still climbing.`,
+      chart: () => ({ type: "spark", values: totals }),
+    },
+    {
+      keys: ["region", "underperform", "west", "east", "central"],
+      label: "Which region is underperforming?",
+      html: () => `<strong>East</strong> is the laggard: August revenue of
+        <strong>$396K</strong> is up just 8.5% year-over-year vs. West's 43.7%.
+        It's also the only region that declined month-over-month (−1.2%). The gap
+        is concentrated in the Footwear category — worth a deeper cohort look.`,
+      chart: () => ({ type: "spark", values: DATA.sales.revenueByRegion.East }),
+    },
+    {
+      keys: ["margin", "profit", "dip"],
+      label: "Why did margin dip in January?",
+      html: () => `Gross margin fell from <strong>43.4%</strong> in December to
+        <strong>41.5%</strong> in January. Two drivers: post-holiday markdowns on
+        Apparel (−1.3pts) and higher freight on restocking (−0.6pts). Margin
+        recovered to 44.2% by August as markdowns rolled off.`,
+      chart: () => ({ type: "spark", values: DATA.finance.grossMarginPct }),
+    },
+    {
+      keys: ["forecast", "next quarter", "predict", "projection"],
+      label: "Forecast next quarter's revenue",
+      html: () => `Based on trend plus seasonality, Sep–Nov revenue projects to
+        <strong>$4.31M ± $0.19M</strong> (vs. $4.13M last year, +4.4%). West
+        carries most of the growth; the model assumes no new store openings.
+        <em>In a client build this runs on a real forecasting model, refreshed
+        with every data load.</em>`,
+      chart: () => ({ type: "spark", values: [...totals, 1408, 1432, 1470] }),
+    },
+    {
+      keys: ["campaign", "roas", "marketing", "ads", "spend"],
+      label: "Which campaigns are paying off?",
+      html: () => `Email is the quiet winner: <strong>Loyalty Re-engage</strong>
+        returned <strong>12.1×</strong> on $3.4K spend. Among paid campaigns,
+        Summer Trail Sale leads at 3.9×, while <strong>Back to School (2.4×)</strong>
+        is below the 3× target — candidates for creative refresh or budget shift.`,
+    },
+    {
+      keys: ["receivable", "aging", "cash", "owed", "ar "],
+      label: "How healthy are our receivables?",
+      html: () => `Reasonably healthy: <strong>66.3%</strong> of the $772.7K
+        outstanding is current, and only <strong>$48.3K (6.3%)</strong> is past
+        60 days — down 8.6% from July. Two accounts make up most of the 90+
+        bucket; a reminder sequence is the cheap fix.`,
+    },
+  ];
+
+  const FALLBACK = `I don't have that in this scripted demo — try one of the
+    suggested questions below. <em>A production assistant would query your live
+    data to answer this, or tell you clearly when the data can't support an
+    answer.</em>`;
+
+  function addMsg(cls, html) {
+    const d = document.createElement("div");
+    d.className = `msg ${cls}`;
+    d.innerHTML = html;
+    log.appendChild(d);
+    log.scrollTop = log.scrollHeight;
+    return d;
+  }
+
+  function answer(text) {
+    addMsg("user", text);
+    const typing = addMsg("bot typing", "Analyzing…");
+    const t = text.toLowerCase();
+    const hit = ANSWERS.find(a => a.keys.some(k => t.includes(k)));
+    setTimeout(() => {
+      typing.classList.remove("typing");
+      let html = hit ? hit.html() : FALLBACK;
+      if (hit && hit.chart) {
+        const c = hit.chart();
+        html += `<div class="msg-chart">${Charts.sparkSVG(c.values, Charts.css("--accent"), 220, 44)}</div>`;
+      }
+      typing.innerHTML = html;
+      log.scrollTop = log.scrollHeight;
+    }, 700);
+  }
+
+  // suggestion chips
+  ANSWERS.slice(0, 4).forEach(a => {
+    const b = document.createElement("button");
+    b.className = "chip";
+    b.textContent = a.label;
+    b.addEventListener("click", () => answer(a.label));
+    suggestBox.appendChild(b);
+  });
+
+  function submit() {
+    const v = input.value.trim();
+    if (!v) return;
+    input.value = "";
+    answer(v);
+  }
+  document.getElementById("send").addEventListener("click", submit);
+  input.addEventListener("keydown", (e) => { if (e.key === "Enter") submit(); });
+
+  addMsg("bot", `Hi — I'm the demo data assistant for
+    <strong>Northwind Outfitters</strong> (a fictional retailer). Ask me about
+    revenue, regions, margin, campaigns, or forecasts, or tap a suggestion below.`);
+</script>
+
+<style>
+  @media (max-width: 800px) {
+    .grid[style*="300px"] { grid-template-columns: 1fr !important; }
+  }
+</style>
+</body>
+</html>
