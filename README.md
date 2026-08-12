@@ -6,7 +6,7 @@ reports, data science, and AI assistants trained on the client's own data.
 
 > Named **Sightcraft Analytics** (vetted via web search Aug 2026 — no existing
 > company found, but run a USPTO trademark check and register the domain before
-> committing). The contact email in `index.html` is currently a personal Gmail.
+> committing). Contact email: hoan.dinh@sightcraftanalytics.com.
 
 ## Pages
 
