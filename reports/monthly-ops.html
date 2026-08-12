@@ -26,6 +26,9 @@
     <div class="report-title">Monthly Operations Review</div>
     <div class="report-sub">August 2026 · Compared to July and trailing 12 months
       · Delivered the first business day of each month</div>
+    <div style="margin:12px 0 2px">
+      <span class="report-mode">Target-based · RAG status</span>
+    </div>
     <div class="rule"></div>
     <div class="rule-thin"></div>
   </div>
@@ -71,6 +74,25 @@
     <div class="tile" id="k2"></div>
     <div class="tile" id="k3"></div>
     <div class="tile" id="k4"></div>
+  </div>
+
+  <!-- ================================================= performance scorecard -->
+  <div class="report-section" style="margin-top:26px">
+    <div class="sec-head"><span class="sec-num">§0</span><h2>Performance scorecard</h2></div>
+    <p class="sec-lede">Every metric ops leadership is accountable for, against its
+    standing target. This is the audit trail — <strong>2 of 8 are behind
+    target</strong>, both already covered by an action below.</p>
+    <div class="card">
+      <div class="scorecard-wrap">
+        <table class="scorecard" id="t-scorecard">
+          <thead><tr>
+            <th>Metric</th><th class="num">Target</th><th class="num">Actual</th>
+            <th class="num">vs. July</th><th>Status</th>
+          </tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
   <!-- ===================================================== fulfillment -->
@@ -219,16 +241,36 @@
         <li><div class="act-body"><strong>Rebalance footwear inventory before the
           fall reset.</strong> Transfer the 14 aged SKU concentrations from East
           to West (where sell-through supports full price). Estimated cost $8K in
-          freight vs. an estimated $45–60K Q4 markdown exposure if held.</div></li>
+          freight vs. an estimated $45–60K Q4 markdown exposure if held.
+          <div class="act-meta"><span class="tag-owner">Merchandising</span><span class="tag-due">Aug 22</span></div>
+        </div></li>
         <li><div class="act-body"><strong>Fix Allentown's staffing shape, not its
           headcount.</strong> Shift 6 FTEs to a weekend crew to cut the 9.6%
           overtime and close half the UPH gap — modeled at $0.18/order
-          network-wide, ~$14K/month at current volume.</div></li>
+          network-wide, ~$14K/month at current volume.
+          <div class="act-meta"><span class="tag-owner">Ops · Allentown site lead</span><span class="tag-due">Sep 1</span></div>
+        </div></li>
         <li><div class="act-body"><strong>Lock the peak-season plan by September 15.</strong>
           Assume December costs +$1.12/order and −3.2pts OTIF as the baseline
           (last year's actuals), then buy it down: temp-labor contracts signed by
-          early October beat spot rates by ~18%.</div></li>
+          early October beat spot rates by ~18%.
+          <div class="act-meta"><span class="tag-owner">Supply chain</span><span class="tag-due">Sep 15</span></div>
+        </div></li>
       </ol>
+    </div>
+  </div>
+
+  <!-- ======================================================== glossary -->
+  <div class="report-section" style="margin-top:26px">
+    <div class="sec-head"><span class="sec-num">§6</span><h2>Metric definitions</h2></div>
+    <div class="card glossary-card" style="margin-top:14px">
+      <dl>
+        <dt>OTIF</dt><dd>On-time-in-full — orders shipped complete, by the promised date.</dd>
+        <dt>UPH</dt><dd>Units per hour — warehouse labor throughput per worked hour.</dd>
+        <dt>Turns</dt><dd>Inventory turns — cost of goods sold ÷ average inventory value, annualized.</dd>
+        <dt>Aged stock</dt><dd>Units that have sat in inventory more than 90 days without selling.</dd>
+        <dt>Order defect rate</dt><dd>Orders with a quality issue (damage, wrong item, mis-pick) as a percent of orders shipped.</dd>
+      </dl>
     </div>
   </div>
 
@@ -262,6 +304,31 @@
   Charts.statTile(document.getElementById("k4"), {
     label: "Order defect rate", value: "1.4%", delta: -0.1, upIsGood: false,
     deltaLabel: "pts vs Jul", spark: O.defectPct });
+
+  // §0 performance scorecard — target vs. actual, RAG status
+  const footwear = O.inventoryByCategory.find(c => c.category === "Footwear");
+  const allentown = O.laborDetail.find(l => l.site.startsWith("Allentown"));
+  const costTotal = months.map((_, i) => Object.values(O.costPerOrder).reduce((a, s) => a + s[i], 0));
+  const rag = (status) => {
+    const label = { good: "On track", watch: "Watch", behind: "Behind target" }[status];
+    return `<span class="rag ${status}"><span class="dot"></span>${label}</span>`;
+  };
+  const SCORECARD = [
+    { metric: "On-time-in-full", target: "≥ 96.0%", actual: "95.8%", vs: "+0.5pt", status: "watch" },
+    { metric: "Cost per order", target: "≤ $6.75", actual: `$${costTotal[11].toFixed(2)}`, vs: "−$0.09", status: "good" },
+    { metric: "Time to ship", target: "≤ 24 hrs", actual: `${O.shipHours[11]} hrs`, vs: "−1 hr", status: "good" },
+    { metric: "Inventory turns", target: "≥ 6.0", actual: O.inventoryTurns[11].toFixed(1), vs: "+0.1", status: "good" },
+    { metric: "Stockout rate", target: "≤ 2.0%", actual: `${O.stockoutPct[11].toFixed(1)}%`, vs: "−0.1pt", status: "good" },
+    { metric: "Order defect rate", target: "≤ 1.5%", actual: `${O.defectPct[11].toFixed(1)}%`, vs: "−0.1pt", status: "good" },
+    { metric: "Footwear days on hand", target: "≤ 60 days", actual: `${footwear.daysOnHand} days`, vs: "+3 days", status: "behind" },
+    { metric: "Allentown overtime", target: "≤ 8.0%", actual: `${allentown.overtimePct.toFixed(1)}%`, vs: "+0.4pt", status: "behind" },
+  ];
+  document.querySelector("#t-scorecard tbody").innerHTML = SCORECARD.map(r => `
+    <tr><td>${r.metric}</td>
+      <td class="num" style="color:var(--muted)">${r.target}</td>
+      <td class="num" style="font-weight:600">${r.actual}</td>
+      <td class="num">${r.vs}</td>
+      <td>${rag(r.status)}</td></tr>`).join("");
 
   // §1 fulfillment
   Charts.lineChart(document.getElementById("c-otif"), {
