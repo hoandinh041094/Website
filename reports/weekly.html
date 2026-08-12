@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weekly Business Review — Sightcraft Analytics demo</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="nav">
+    <a class="brand" href="../index.html">Sightcraft<span>&nbsp;Analytics</span></a>
+    <nav>
+      <a href="../dashboards/sales.html">Sales</a>
+      <a href="../dashboards/finance.html">Finance</a>
+      <a href="../dashboards/marketing.html">Marketing</a>
+      <a href="weekly.html" class="active">Weekly report</a>
+      <a href="../chatbot.html">AI assistant</a>
+    </nav>
+  </header>
+
+  <div style="padding-top:28px">
+    <div class="kicker">Demo build · Northwind Outfitters (fictional) · Prepared for the executive team</div>
+    <div class="report-title">Weekly Business Review</div>
+    <div class="report-sub">Week ending Sunday, August 9 · Compared to prior week
+      and trailing 4-week average · Delivered every Monday, 7:00 AM</div>
+    <div class="rule"></div>
+    <div class="rule-thin"></div>
+  </div>
+
+  <!-- ================================================= executive summary -->
+  <div class="exec-summary">
+    <div class="kicker" style="margin-bottom:10px">Executive summary</div>
+    <p><strong>The best week of the quarter.</strong> Revenue reached
+    <strong>$358K</strong> (+2.0% week-over-week, +4.6% vs. the 4-week average),
+    the eighth up-week in the last ten, with orders crossing 1,300 for the first
+    time. Growth is broad but not even: West continues to carry the quarter
+    (+2.7% WoW) while East posted its sixth straight flat week — the softness is
+    isolated to footwear and looks structural, not seasonal.</p>
+    <p>Margin held at a year-high <strong>44.2%</strong> and fulfillment recovered
+    fully from the late-June warehouse disruption, setting a new on-time record of
+    <strong>96.2%</strong>. New-customer volume hit <strong>356</strong>, the
+    strongest week this year, with referral growth (+7.3%) quietly becoming the
+    most efficient paid-adjacent channel.</p>
+    <div class="exec-cols">
+      <div>
+        <h4>Working</h4>
+        <ul>
+          <li><strong>Revenue momentum:</strong> 8 of last 10 weeks up; orders at an all-time weekly high.</li>
+          <li><strong>Fulfillment:</strong> on-time at 96.2%, best on record; returns down to 2.7%.</li>
+          <li><strong>Referrals:</strong> +7.3% WoW at $8.60 CAC — cheapest growth after organic.</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Needs attention</h4>
+        <ul>
+          <li><strong>East region:</strong> six flat weeks; footwear is the drag (see §1 drill-down).</li>
+          <li><strong>Allentown warehouse:</strong> lowest on-time (94.6%), highest backlog (88 orders).</li>
+          <li><strong>Paid CAC:</strong> $21.40, creeping up 3 weeks running — watch vs. the $25 ceiling.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================================================== headline KPIs -->
+  <div class="grid grid-4" style="margin-bottom:8px">
+    <div class="tile" id="k1"></div>
+    <div class="tile" id="k2"></div>
+    <div class="tile" id="k3"></div>
+    <div class="tile" id="k4"></div>
+  </div>
+
+  <!-- ========================================================= revenue -->
+  <div class="report-section">
+    <div class="sec-head"><span class="sec-num">§1</span><h2>Revenue</h2></div>
+    <p class="sec-lede"><strong>$358K, +2.0% WoW.</strong> The trend is intact and
+    accelerating slightly — the last four weeks averaged $350K vs. $336K the four
+    before. Expand the layers below to see where the growth actually comes from.</p>
+    <div class="chart-card">
+      <h3>Weekly revenue — trailing 13 weeks</h3>
+      <div class="chart-sub">$ thousands, week ending Sunday</div>
+      <div id="c-rev"></div>
+    </div>
+
+    <details class="drill">
+      <summary>Layer down: revenue by region <span class="hint">3 regions · this week vs. trend</span></summary>
+      <div class="drill-body">
+        <div class="chart-sub">Weekly revenue by region, $ thousands</div>
+        <div id="c-rev-region"></div>
+        <div class="table-scroll" style="margin-top:12px">
+          <table class="data-table" id="t-region">
+            <thead><tr>
+              <th>Region</th><th class="num">Revenue</th><th class="num">WoW</th>
+              <th class="num">vs 4-wk avg</th><th>What's driving it</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </details>
+
+    <details class="drill">
+      <summary>Layer down: revenue by category <span class="hint">3 categories · basket depth</span></summary>
+      <div class="drill-body">
+        <div class="table-scroll">
+          <table class="data-table" id="t-category">
+            <thead><tr>
+              <th>Category</th><th class="num">Revenue ($K)</th>
+              <th class="num">WoW</th><th class="num">Units per order</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p style="font-size:.85rem;color:var(--muted);margin:10px 0 0">
+        Accessories keep outgrowing the store (+3.8% WoW) on the strength of
+        add-to-cart bundling — the attach-rate experiment from July is paying for
+        itself. Footwear's softness is concentrated in East (see §1 regions).</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- ====================================================== operations -->
+  <div class="report-section">
+    <div class="sec-head"><span class="sec-num">§2</span><h2>Operations</h2></div>
+    <p class="sec-lede"><strong>On-time delivery 96.2% — a new record.</strong>
+    The late-June dip (92.1%, caused by the Allentown conveyor outage) has fully
+    washed out. Returns fell again to 2.7%, the lowest since we began tracking.</p>
+    <div class="grid grid-2">
+      <div class="chart-card">
+        <h3>On-time fulfillment</h3>
+        <div class="chart-sub">Percent of orders shipped on time, weekly</div>
+        <div id="c-ontime"></div>
+      </div>
+      <div class="chart-card">
+        <h3>Return rate</h3>
+        <div class="chart-sub">Percent of orders returned, weekly</div>
+        <div id="c-returns"></div>
+      </div>
+    </div>
+
+    <details class="drill">
+      <summary>Layer down: fulfillment by warehouse <span class="hint">3 sites · on-time, speed, backlog</span></summary>
+      <div class="drill-body">
+        <div class="table-scroll">
+          <table class="data-table" id="t-warehouse">
+            <thead><tr>
+              <th>Warehouse</th><th class="num">On-time %</th>
+              <th class="num">Avg. hours to ship</th><th class="num">Open backlog</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p style="font-size:.85rem;color:var(--muted);margin:10px 0 0">
+        Allentown remains the weakest site on all three measures. Its backlog
+        (88) is double Reno's — if East demand recovers, it becomes the
+        bottleneck. Recommend the overflow-routing change before the September
+        push (see action 2).</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- ======================================================= customers -->
+  <div class="report-section">
+    <div class="sec-head"><span class="sec-num">§3</span><h2>Customers</h2></div>
+    <p class="sec-lede"><strong>356 new customers — best week of the year.</strong>
+    Acquisition is compounding: every channel grew, and the mix is shifting toward
+    the cheap ones (organic and referral are now 52% of new customers).</p>
+    <div class="chart-card">
+      <h3>New customers per week</h3>
+      <div class="chart-sub">Trailing 13 weeks</div>
+      <div id="c-newcust"></div>
+    </div>
+
+    <details class="drill">
+      <summary>Layer down: acquisition by channel <span class="hint">4 channels · volume, growth, CAC</span></summary>
+      <div class="drill-body">
+        <div class="table-scroll">
+          <table class="data-table" id="t-channel">
+            <thead><tr>
+              <th>Channel</th><th class="num">New customers</th>
+              <th class="num">WoW</th><th class="num">CAC</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p style="font-size:.85rem;color:var(--muted);margin:10px 0 0">
+        Paid social CAC has risen three straight weeks ($19.80 → $20.60 → $21.40).
+        Still under the $25 ceiling, but the trend line crosses it in ~5 weeks if
+        unaddressed — creative refresh is queued (action 3).</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- ========================================================== actions -->
+  <div class="report-section">
+    <div class="sec-head"><span class="sec-num">§4</span><h2>Recommended actions</h2></div>
+    <div class="card" style="margin-top:14px">
+      <ol class="actions-list">
+        <li><div class="act-body"><strong>Diagnose East footwear this week.</strong>
+          Six flat weeks is a pattern, not noise. Pull the size/SKU-level sell-through
+          for East's top 20 footwear lines and compare against West — if the gap is
+          assortment, it's fixable before the fall reset.</div></li>
+        <li><div class="act-body"><strong>Approve Allentown overflow routing.</strong>
+          Shift orders above 70-backlog to Columbus automatically. Modeled cost is
+          +$0.40/order against an estimated 1.1pt on-time gain in East.</div></li>
+        <li><div class="act-body"><strong>Refresh paid social creative before CAC
+          crosses $23.</strong> The current ad set is 9 weeks old; historical decay
+          curves say week 10–12 is where CAC inflects. New variants are ready for
+          Thursday's launch window.</div></li>
+      </ol>
+    </div>
+  </div>
+
+  <footer>
+    <div class="foot-grid">
+      <div>Demo report — all data fictional. In a client build this is generated
+        automatically every week and delivered by email or Slack.
+        <a href="../index.html#contact">Want yours?</a></div>
+      <div>© 2026 Sightcraft Analytics</div>
+    </div>
+  </footer>
+
+</div>
+
+<script src="../assets/charts.js"></script>
+<script src="../assets/data.js"></script>
+<script>
+  const W = DATA.weekly;
+
+  // headline KPIs
+  const last = (a) => a[a.length - 1];
+  const wow = (a) => ((last(a) - a[a.length - 2]) / a[a.length - 2]) * 100;
+  Charts.statTile(document.getElementById("k1"), {
+    label: "Revenue", value: "$358K", delta: wow(W.revenue), deltaLabel: "WoW",
+    spark: W.revenue });
+  Charts.statTile(document.getElementById("k2"), {
+    label: "Orders", value: "1,315", delta: wow(W.orders), deltaLabel: "WoW",
+    spark: W.orders });
+  Charts.statTile(document.getElementById("k3"), {
+    label: "Gross margin", value: "44.2%", delta: 0.1, deltaLabel: "pts WoW",
+    spark: W.marginPct });
+  Charts.statTile(document.getElementById("k4"), {
+    label: "New customers", value: "356", delta: wow(W.newCustomers), deltaLabel: "WoW",
+    spark: W.newCustomers });
+
+  // §1 revenue
+  Charts.lineChart(document.getElementById("c-rev"), {
+    labels: W.weeks, prefix: "$", areaFill: true, height: 240,
+    series: [{ name: "Revenue", color: 1, values: W.revenue }],
+  });
+  Charts.lineChart(document.getElementById("c-rev-region"), {
+    labels: W.weeks, prefix: "$", height: 220,
+    series: [
+      { name: "West", color: 1, values: W.revenueByRegion.West },
+      { name: "East", color: 2, values: W.revenueByRegion.East },
+      { name: "Central", color: 3, values: W.revenueByRegion.Central },
+    ],
+  });
+  document.querySelector("#t-region tbody").innerHTML = W.regionDetail.map(r => `
+    <tr><td>${r.region}</td>
+      <td class="num">$${r.revenue}K</td>
+      <td class="num ${r.wow >= 2 ? "pos" : ""}">+${r.wow.toFixed(1)}%</td>
+      <td class="num ${r.vs4wk >= 3 ? "pos" : ""}">+${r.vs4wk.toFixed(1)}%</td>
+      <td style="color:var(--ink-2)">${r.note}</td></tr>`).join("");
+  document.querySelector("#t-category tbody").innerHTML = W.categoryDetail.map(c => `
+    <tr><td>${c.category}</td>
+      <td class="num">$${c.revenue}</td>
+      <td class="num ${c.wow >= 3 ? "pos" : ""}">+${c.wow.toFixed(1)}%</td>
+      <td class="num">${c.unitsPerOrder.toFixed(1)}</td></tr>`).join("");
+
+  // §2 operations
+  Charts.lineChart(document.getElementById("c-ontime"), {
+    labels: W.weeks, height: 220,
+    series: [{ name: "On-time %", color: 3, values: W.onTimePct }],
+  });
+  Charts.lineChart(document.getElementById("c-returns"), {
+    labels: W.weeks, height: 220,
+    series: [{ name: "Returns %", color: 2, values: W.returnsPct }],
+  });
+  document.querySelector("#t-warehouse tbody").innerHTML = W.warehouseDetail.map(w => `
+    <tr><td>${w.site}</td>
+      <td class="num ${w.onTime >= 96 ? "pos" : w.onTime < 95 ? "neg" : ""}">${w.onTime.toFixed(1)}%</td>
+      <td class="num">${w.shipHrs}</td>
+      <td class="num ${w.backlog > 80 ? "neg" : ""}">${w.backlog}</td></tr>`).join("");
+
+  // §3 customers
+  Charts.lineChart(document.getElementById("c-newcust"), {
+    labels: W.weeks, areaFill: true, height: 240,
+    series: [{ name: "New customers", color: 7, values: W.newCustomers }],
+  });
+  document.querySelector("#t-channel tbody").innerHTML = W.acquisitionDetail.map(c => `
+    <tr><td>${c.channel}</td>
+      <td class="num">${c.newCust}</td>
+      <td class="num ${c.wow >= 5 ? "pos" : ""}">+${c.wow.toFixed(1)}%</td>
+      <td class="num">${c.cac === 0 ? "—" : "$" + c.cac.toFixed(2)}</td></tr>`).join("");
+</script>
+</body>
+</html>

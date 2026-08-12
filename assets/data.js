@@ -45,6 +45,44 @@ const DATA = {
     ],
   },
 
+  weekly: {
+    // 13 weeks, each label = week ending (Sunday)
+    weeks: ["May 17", "May 24", "May 31", "Jun 7", "Jun 14", "Jun 21", "Jun 28",
+            "Jul 5", "Jul 12", "Jul 19", "Jul 26", "Aug 2", "Aug 9"],
+    revenue: [318, 322, 316, 327, 331, 336, 329, 341, 338, 346, 344, 351, 358],
+    orders: [1170, 1185, 1160, 1205, 1218, 1240, 1210, 1256, 1244, 1272, 1266, 1290, 1315],
+    marginPct: [43.1, 43.3, 43.0, 43.4, 43.2, 43.6, 43.5, 43.7, 43.6, 43.9, 44.0, 44.1, 44.2],
+    onTimePct: [94.2, 93.8, 94.5, 95.1, 94.8, 95.3, 92.1, 94.9, 95.6, 95.8, 96.0, 95.7, 96.2],
+    returnsPct: [3.1, 3.0, 3.2, 2.9, 3.0, 2.8, 3.4, 2.9, 2.8, 2.7, 2.8, 2.6, 2.7],
+    newCustomers: [284, 291, 275, 302, 296, 311, 289, 322, 316, 330, 327, 341, 356],
+    revenueByRegion: {
+      West:    [128, 130, 127, 133, 135, 138, 134, 141, 139, 143, 142, 146, 150],
+      Central: [93, 94, 92, 95, 97, 98, 96, 99, 98, 101, 100, 102, 104],
+      East:    [97, 98, 97, 99, 99, 100, 99, 101, 101, 102, 102, 103, 104],
+    },
+    regionDetail: [
+      { region: "West", revenue: 150, wow: 2.7, vs4wk: 5.6, note: "Trailhead Outfitters reorder landed; promo lift in footwear" },
+      { region: "Central", revenue: 104, wow: 2.0, vs4wk: 3.0, note: "Steady; back-to-school starting to show in apparel" },
+      { region: "East", revenue: 104, wow: 1.0, vs4wk: 1.7, note: "Flat again — footwear soft for a 6th straight week" },
+    ],
+    categoryDetail: [
+      { category: "Apparel", revenue: 182, wow: 2.3, unitsPerOrder: 1.9 },
+      { category: "Footwear", revenue: 108, wow: 1.4, unitsPerOrder: 1.1 },
+      { category: "Accessories", revenue: 68, wow: 3.8, unitsPerOrder: 2.4 },
+    ],
+    warehouseDetail: [
+      { site: "Reno, NV", onTime: 97.1, shipHrs: 18, backlog: 42 },
+      { site: "Columbus, OH", onTime: 95.8, shipHrs: 21, backlog: 67 },
+      { site: "Allentown, PA", onTime: 94.6, shipHrs: 24, backlog: 88 },
+    ],
+    acquisitionDetail: [
+      { channel: "Organic search", newCust: 142, wow: 5.2, cac: 0 },
+      { channel: "Paid social", newCust: 118, wow: 3.5, cac: 21.4 },
+      { channel: "Email", newCust: 52, wow: 4.0, cac: 2.1 },
+      { channel: "Referral", newCust: 44, wow: 7.3, cac: 8.6 },
+    ],
+  },
+
   marketing: {
     sessionsByChannel: {
       "Organic":   [48.2, 49.1, 52.4, 58.9, 50.2, 51.8, 54.1, 55.6, 57.2, 58.8, 60.1, 62.4],

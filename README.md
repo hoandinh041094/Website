@@ -14,6 +14,8 @@ reports, data science, and AI assistants trained on the client's own data.
 - `dashboards/sales.html` — interactive sales & revenue demo (time-range filter)
 - `dashboards/finance.html` — cash flow, margin, opex, AR aging demo
 - `dashboards/marketing.html` — channels, funnel, conversion heatmap, ROAS demo
+- `reports/weekly.html` — weekly business review demo: executive summary →
+  headline KPIs → expandable drill-downs → recommended actions
 - `chatbot.html` — scripted AI data-assistant demo
 
 ## How it's built
