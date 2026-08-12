@@ -318,5 +318,11 @@ const Charts = (() => {
   window.matchMedia("(prefers-color-scheme: dark)")
     .addEventListener("change", () => registry.forEach(fn => fn()));
 
-  return { lineChart, barChart, heatmap, statTile, sparkSVG, fmtCompact, fmtFull, css, slot };
+  // status pill: dot + label, never color alone (good | watch | behind)
+  function ragBadge(status) {
+    const label = { good: "On track", watch: "Watch", behind: "Behind target" }[status] || status;
+    return `<span class="rag ${status}"><span class="dot"></span>${label}</span>`;
+  }
+
+  return { lineChart, barChart, heatmap, statTile, sparkSVG, fmtCompact, fmtFull, css, slot, ragBadge };
 })();

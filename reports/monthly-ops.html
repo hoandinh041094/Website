@@ -34,65 +34,54 @@
   </div>
 
   <!-- ================================================= executive summary -->
-  <div class="exec-summary">
-    <div class="kicker" style="margin-bottom:10px">Executive summary</div>
-    <p><strong>The best operating month on record, with one flag.</strong>
-    On-time-in-full reached <strong>95.8%</strong> (+0.5pt vs. July) and cost per
-    order fell for the sixth straight month to <strong>$6.49</strong> — down 15%
-    from the December peak. The network has fully absorbed the June conveyor
-    outage at Allentown, and average time-to-ship is at a 12-month low of 21
-    hours.</p>
-    <p>The flag is <strong>footwear inventory</strong>: 68 days on hand and 14.6%
-    of units aged past 90 days — both worst in the portfolio — while East-region
-    footwear demand stays soft. Holding through the fall reset risks a markdown
-    bill in Q4; rebalancing now costs far less. Labor is the other gap worth
-    attention: Allentown runs 14% below Reno on units per hour and carries 9.6%
-    overtime, the network's highest.</p>
-    <div class="exec-cols">
-      <div>
-        <h4>Working</h4>
-        <ul>
-          <li><strong>OTIF 95.8%:</strong> record high; every site improved in July–August.</li>
-          <li><strong>Cost per order $6.49:</strong> six consecutive down months; labor and shipping both trending down.</li>
-          <li><strong>Defect rate 1.4%:</strong> best on record; damaged-in-transit share down again.</li>
-        </ul>
+  <div class="summary-row">
+    <div class="exec-summary">
+      <div class="kicker" style="margin-bottom:10px">Executive summary</div>
+      <p><strong>The best operating month on record, with one flag.</strong>
+      On-time-in-full reached <strong>95.8%</strong> (+0.5pt vs. July) and cost per
+      order fell for the sixth straight month to <strong>$6.49</strong> — down 15%
+      from the December peak. The network has fully absorbed the June conveyor
+      outage at Allentown, and average time-to-ship is at a 12-month low of 21
+      hours.</p>
+      <p>The flag is <strong>footwear inventory</strong>: 68 days on hand and 14.6%
+      of units aged past 90 days — both worst in the portfolio — while East-region
+      footwear demand stays soft. Holding through the fall reset risks a markdown
+      bill in Q4; rebalancing now costs far less. Labor is the other gap worth
+      attention: Allentown runs 14% below Reno on units per hour and carries 9.6%
+      overtime, the network's highest.</p>
+      <div class="exec-cols">
+        <div>
+          <h4>Working</h4>
+          <ul>
+            <li><strong>OTIF 95.8%:</strong> record high; every site improved in July–August.</li>
+            <li><strong>Cost per order $6.49:</strong> six consecutive down months; labor and shipping both trending down.</li>
+            <li><strong>Defect rate 1.4%:</strong> best on record; damaged-in-transit share down again.</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Needs attention</h4>
+          <ul>
+            <li><strong>Footwear inventory:</strong> 68 days on hand, 14.6% aged &gt;90 days (see §2 drill-down).</li>
+            <li><strong>Allentown labor:</strong> 29.4 UPH vs. Reno's 34.2; overtime 9.6% and rising.</li>
+            <li><strong>December readiness:</strong> last holiday cost +$1.12/order and −3.2pts OTIF — peak plan due September.</li>
+          </ul>
+        </div>
       </div>
-      <div>
-        <h4>Needs attention</h4>
-        <ul>
-          <li><strong>Footwear inventory:</strong> 68 days on hand, 14.6% aged &gt;90 days (see §2 drill-down).</li>
-          <li><strong>Allentown labor:</strong> 29.4 UPH vs. Reno's 34.2; overtime 9.6% and rising.</li>
-          <li><strong>December readiness:</strong> last holiday cost +$1.12/order and −3.2pts OTIF — peak plan due September.</li>
-        </ul>
-      </div>
+    </div>
+
+    <div class="scorecard-panel">
+      <div class="kicker" style="margin-bottom:10px">This month's scorecard</div>
+      <p class="panel-note" id="mo-scorecard-note"></p>
+      <table class="panel-scorecard" id="t-scorecard"><tbody></tbody></table>
     </div>
   </div>
 
   <!-- ==================================================== headline KPIs -->
-  <div class="grid grid-4" style="margin-bottom:8px">
+  <div class="grid grid-4" style="margin:20px 0 8px">
     <div class="tile" id="k1"></div>
     <div class="tile" id="k2"></div>
     <div class="tile" id="k3"></div>
     <div class="tile" id="k4"></div>
-  </div>
-
-  <!-- ================================================= performance scorecard -->
-  <div class="report-section" style="margin-top:26px">
-    <div class="sec-head"><span class="sec-num">§0</span><h2>Performance scorecard</h2></div>
-    <p class="sec-lede">Every metric ops leadership is accountable for, against its
-    standing target. This is the audit trail — <strong>2 of 8 are behind
-    target</strong>, both already covered by an action below.</p>
-    <div class="card">
-      <div class="scorecard-wrap">
-        <table class="scorecard" id="t-scorecard">
-          <thead><tr>
-            <th>Metric</th><th class="num">Target</th><th class="num">Actual</th>
-            <th class="num">vs. July</th><th>Status</th>
-          </tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </div>
   </div>
 
   <!-- ===================================================== fulfillment -->
@@ -305,30 +294,29 @@
     label: "Order defect rate", value: "1.4%", delta: -0.1, upIsGood: false,
     deltaLabel: "pts vs Jul", spark: O.defectPct });
 
-  // §0 performance scorecard — target vs. actual, RAG status
+  // this month's scorecard — target vs. actual, next to the exec summary
   const footwear = O.inventoryByCategory.find(c => c.category === "Footwear");
   const allentown = O.laborDetail.find(l => l.site.startsWith("Allentown"));
   const costTotal = months.map((_, i) => Object.values(O.costPerOrder).reduce((a, s) => a + s[i], 0));
-  const rag = (status) => {
-    const label = { good: "On track", watch: "Watch", behind: "Behind target" }[status];
-    return `<span class="rag ${status}"><span class="dot"></span>${label}</span>`;
-  };
   const SCORECARD = [
-    { metric: "On-time-in-full", target: "≥ 96.0%", actual: "95.8%", vs: "+0.5pt", status: "watch" },
-    { metric: "Cost per order", target: "≤ $6.75", actual: `$${costTotal[11].toFixed(2)}`, vs: "−$0.09", status: "good" },
-    { metric: "Time to ship", target: "≤ 24 hrs", actual: `${O.shipHours[11]} hrs`, vs: "−1 hr", status: "good" },
-    { metric: "Inventory turns", target: "≥ 6.0", actual: O.inventoryTurns[11].toFixed(1), vs: "+0.1", status: "good" },
-    { metric: "Stockout rate", target: "≤ 2.0%", actual: `${O.stockoutPct[11].toFixed(1)}%`, vs: "−0.1pt", status: "good" },
-    { metric: "Order defect rate", target: "≤ 1.5%", actual: `${O.defectPct[11].toFixed(1)}%`, vs: "−0.1pt", status: "good" },
-    { metric: "Footwear days on hand", target: "≤ 60 days", actual: `${footwear.daysOnHand} days`, vs: "+3 days", status: "behind" },
-    { metric: "Allentown overtime", target: "≤ 8.0%", actual: `${allentown.overtimePct.toFixed(1)}%`, vs: "+0.4pt", status: "behind" },
+    { metric: "On-time-in-full", target: "≥ 96.0%", actual: "95.8%", delta: "+0.5pt vs Jul", status: "watch" },
+    { metric: "Cost per order", target: "≤ $6.75", actual: `$${costTotal[11].toFixed(2)}`, delta: "−$0.09 vs Jul", status: "good" },
+    { metric: "Time to ship", target: "≤ 24 hrs", actual: `${O.shipHours[11]} hrs`, delta: "−1 hr vs Jul", status: "good" },
+    { metric: "Inventory turns", target: "≥ 6.0", actual: O.inventoryTurns[11].toFixed(1), delta: "+0.1 vs Jul", status: "good" },
+    { metric: "Stockout rate", target: "≤ 2.0%", actual: `${O.stockoutPct[11].toFixed(1)}%`, delta: "−0.1pt vs Jul", status: "good" },
+    { metric: "Order defect rate", target: "≤ 1.5%", actual: `${O.defectPct[11].toFixed(1)}%`, delta: "−0.1pt vs Jul", status: "good" },
+    { metric: "Footwear days on hand", target: "≤ 60 days", actual: `${footwear.daysOnHand} days`, delta: "+3 days vs Jul", status: "behind" },
+    { metric: "Allentown overtime", target: "≤ 8.0%", actual: `${allentown.overtimePct.toFixed(1)}%`, delta: "+0.4pt vs Jul", status: "behind" },
   ];
+  const moBehind = SCORECARD.filter(r => r.status !== "good").length;
+  document.getElementById("mo-scorecard-note").innerHTML =
+    `<strong>${SCORECARD.length - moBehind} of ${SCORECARD.length}</strong> on track this month.`;
   document.querySelector("#t-scorecard tbody").innerHTML = SCORECARD.map(r => `
-    <tr><td>${r.metric}</td>
-      <td class="num" style="color:var(--muted)">${r.target}</td>
-      <td class="num" style="font-weight:600">${r.actual}</td>
-      <td class="num">${r.vs}</td>
-      <td>${rag(r.status)}</td></tr>`).join("");
+    <tr>
+      <td><span class="m-name">${r.metric}</span><span class="m-target">Target: ${r.target}</span></td>
+      <td class="m-actual">${r.actual}<span class="m-delta">${r.delta}</span></td>
+      <td class="m-status">${Charts.ragBadge(r.status)}</td>
+    </tr>`).join("");
 
   // §1 fulfillment
   Charts.lineChart(document.getElementById("c-otif"), {

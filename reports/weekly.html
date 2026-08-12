@@ -31,36 +31,44 @@
   </div>
 
   <!-- ================================================= executive summary -->
-  <div class="exec-summary">
-    <div class="kicker" style="margin-bottom:10px">Executive summary</div>
-    <p><strong>The best week of the quarter.</strong> Revenue reached
-    <strong>$358K</strong> (+2.0% week-over-week, +4.6% vs. the 4-week average),
-    the eighth up-week in the last ten, with orders crossing 1,300 for the first
-    time. Growth is broad but not even: West continues to carry the quarter
-    (+2.7% WoW) while East posted its sixth straight flat week — the softness is
-    isolated to footwear and looks structural, not seasonal.</p>
-    <p>Margin held at a year-high <strong>44.2%</strong> and fulfillment recovered
-    fully from the late-June warehouse disruption, setting a new on-time record of
-    <strong>96.2%</strong>. New-customer volume hit <strong>356</strong>, the
-    strongest week this year, with referral growth (+7.3%) quietly becoming the
-    most efficient paid-adjacent channel.</p>
-    <div class="exec-cols">
-      <div>
-        <h4>Working</h4>
-        <ul>
-          <li><strong>Revenue momentum:</strong> 8 of last 10 weeks up; orders at an all-time weekly high.</li>
-          <li><strong>Fulfillment:</strong> on-time at 96.2%, best on record; returns down to 2.7%.</li>
-          <li><strong>Referrals:</strong> +7.3% WoW at $8.60 CAC — cheapest growth after organic.</li>
-        </ul>
+  <div class="summary-row">
+    <div class="exec-summary">
+      <div class="kicker" style="margin-bottom:10px">Executive summary</div>
+      <p><strong>The best week of the quarter.</strong> Revenue reached
+      <strong>$358K</strong> (+2.0% week-over-week, +4.6% vs. the 4-week average),
+      the eighth up-week in the last ten, with orders crossing 1,300 for the first
+      time. Growth is broad but not even: West continues to carry the quarter
+      (+2.7% WoW) while East posted its sixth straight flat week — the softness is
+      isolated to footwear and looks structural, not seasonal.</p>
+      <p>Margin held at a year-high <strong>44.2%</strong> and fulfillment recovered
+      fully from the late-June warehouse disruption, setting a new on-time record of
+      <strong>96.2%</strong>. New-customer volume hit <strong>356</strong>, the
+      strongest week this year, with referral growth (+7.3%) quietly becoming the
+      most efficient paid-adjacent channel.</p>
+      <div class="exec-cols">
+        <div>
+          <h4>Working</h4>
+          <ul>
+            <li><strong>Revenue momentum:</strong> 8 of last 10 weeks up; orders at an all-time weekly high.</li>
+            <li><strong>Fulfillment:</strong> on-time at 96.2%, best on record; returns down to 2.7%.</li>
+            <li><strong>Referrals:</strong> +7.3% WoW at $8.60 CAC — cheapest growth after organic.</li>
+          </ul>
+        </div>
+        <div>
+          <h4>Needs attention</h4>
+          <ul>
+            <li><strong>East region:</strong> six flat weeks; footwear is the drag (see §1 drill-down).</li>
+            <li><strong>Allentown warehouse:</strong> lowest on-time (94.6%), highest backlog (88 orders).</li>
+            <li><strong>Paid CAC:</strong> $21.40, creeping up 3 weeks running — watch vs. the $25 ceiling.</li>
+          </ul>
+        </div>
       </div>
-      <div>
-        <h4>Needs attention</h4>
-        <ul>
-          <li><strong>East region:</strong> six flat weeks; footwear is the drag (see §1 drill-down).</li>
-          <li><strong>Allentown warehouse:</strong> lowest on-time (94.6%), highest backlog (88 orders).</li>
-          <li><strong>Paid CAC:</strong> $21.40, creeping up 3 weeks running — watch vs. the $25 ceiling.</li>
-        </ul>
-      </div>
+    </div>
+
+    <div class="scorecard-panel">
+      <div class="kicker" style="margin-bottom:10px">This week's scorecard</div>
+      <p class="panel-note" id="wk-scorecard-note"></p>
+      <table class="panel-scorecard" id="t-wk-scorecard"><tbody></tbody></table>
     </div>
   </div>
 
@@ -244,6 +252,27 @@
   Charts.statTile(document.getElementById("k4"), {
     label: "New customers", value: "356", delta: wow(W.newCustomers), deltaLabel: "WoW",
     spark: W.newCustomers });
+
+  // this week's scorecard — target vs. actual, next to the exec summary
+  const paidCac = W.acquisitionDetail.find(a => a.channel === "Paid social").cac;
+  const WK_SCORECARD = [
+    { metric: "Revenue", target: "≥ +1.5% WoW", actual: "$358K", delta: `+${wow(W.revenue).toFixed(1)}% WoW`, status: "good" },
+    { metric: "Orders", target: "≥ +1.5% WoW", actual: "1,315", delta: `+${wow(W.orders).toFixed(1)}% WoW`, status: "good" },
+    { metric: "On-time delivery", target: "≥ 95.0%", actual: "96.2%", delta: "best on record", status: "good" },
+    { metric: "Return rate", target: "≤ 3.0%", actual: "2.7%", delta: "steady", status: "good" },
+    { metric: "New customers", target: "≥ +3.0% WoW", actual: "356", delta: `+${wow(W.newCustomers).toFixed(1)}% WoW`, status: "good" },
+    { metric: "East region revenue", target: "≥ +1.5% WoW", actual: "$104K", delta: `+${wow(W.revenueByRegion.East).toFixed(1)}% WoW`, status: "behind" },
+    { metric: "Paid social CAC", target: "≤ $25.00", actual: `$${paidCac.toFixed(2)}`, delta: "up 3 weeks running", status: "watch" },
+  ];
+  const wkBehind = WK_SCORECARD.filter(r => r.status !== "good").length;
+  document.getElementById("wk-scorecard-note").innerHTML =
+    `<strong>${WK_SCORECARD.length - wkBehind} of ${WK_SCORECARD.length}</strong> on track this week.`;
+  document.querySelector("#t-wk-scorecard tbody").innerHTML = WK_SCORECARD.map(r => `
+    <tr>
+      <td><span class="m-name">${r.metric}</span><span class="m-target">Target: ${r.target}</span></td>
+      <td class="m-actual">${r.actual}<span class="m-delta">${r.delta}</span></td>
+      <td class="m-status">${Charts.ragBadge(r.status)}</td>
+    </tr>`).join("");
 
   // §1 revenue
   Charts.lineChart(document.getElementById("c-rev"), {

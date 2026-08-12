@@ -263,6 +263,27 @@ a.card-link .go { color: var(--accent); font-size: .88rem; font-weight: 600; mar
 .exec-cols li { margin-bottom: 6px; font-size: .92rem; color: var(--ink-2); }
 .exec-cols li strong { color: var(--ink); }
 
+/* exec summary + scorecard, side by side */
+.summary-row { display: flex; align-items: stretch; gap: 20px; margin: 20px 0; }
+.summary-row .exec-summary { flex: 1.5 1 0; margin: 0; min-width: 0; }
+.summary-row .scorecard-panel { flex: 1 1 0; min-width: 280px; margin: 0; }
+@media (max-width: 860px) { .summary-row { flex-direction: column; } }
+
+.scorecard-panel {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  padding: 22px 24px; display: flex; flex-direction: column;
+}
+.scorecard-panel .panel-note { font-size: .82rem; color: var(--ink-2); margin: 0 0 14px; }
+.scorecard-panel .panel-note strong { color: var(--ink); }
+.panel-scorecard { width: 100%; border-collapse: collapse; font-size: .85rem; }
+.panel-scorecard td { padding: 9px 0; border-bottom: 1px solid var(--grid); vertical-align: top; }
+.panel-scorecard tr:last-child td { border-bottom: 0; }
+.panel-scorecard .m-name { font-weight: 600; color: var(--ink); }
+.panel-scorecard .m-target { display: block; font-weight: 400; font-size: .74rem; color: var(--muted); margin-top: 1px; }
+.panel-scorecard .m-actual { text-align: right; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; padding-left: 10px; }
+.panel-scorecard .m-delta { display: block; font-weight: 400; font-size: .74rem; color: var(--muted); margin-top: 1px; }
+.panel-scorecard .m-status { text-align: right; padding-left: 10px; white-space: nowrap; }
+
 .report-section { margin: 34px 0; }
 .report-section .sec-head {
   display: flex; align-items: baseline; gap: 12px;
@@ -325,17 +346,6 @@ details.drill .drill-body .chart-sub { color: var(--muted); font-size: .8rem; ma
 .rag.good .dot { background: var(--status-good); }
 .rag.watch .dot { background: var(--status-warning); }
 .rag.behind .dot { background: var(--status-critical); }
-
-.scorecard-wrap { overflow-x: auto; }
-.scorecard { width: 100%; border-collapse: collapse; font-size: .88rem; }
-.scorecard caption { text-align: left; caption-side: top; color: var(--muted); font-size: .78rem; margin-bottom: 8px; }
-.scorecard th {
-  text-align: left; font-size: .72rem; text-transform: uppercase; letter-spacing: .08em;
-  color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--baseline); padding: 9px 12px;
-}
-.scorecard th.num, .scorecard td.num { text-align: right; }
-.scorecard td { padding: 10px 12px; border-bottom: 1px solid var(--grid); font-variant-numeric: tabular-nums; }
-.scorecard tbody tr:hover { background: var(--bg); }
 
 .glossary-card { font-size: .85rem; }
 .glossary-card dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 14px; margin: 0; }
