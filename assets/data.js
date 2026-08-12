@@ -83,6 +83,47 @@ const DATA = {
     ],
   },
 
+  monthlyOps: {
+    // aligned to DATA.months (Sep → Aug)
+    otifPct: [92.1, 92.4, 91.8, 90.6, 92.9, 93.2, 93.8, 94.1, 94.6, 93.4, 95.3, 95.8],
+    shipHours: [26, 25, 27, 30, 26, 25, 24, 24, 23, 25, 22, 21],
+    costPerOrder: {
+      Labor:     [3.05, 3.02, 3.15, 3.38, 3.08, 3.02, 2.98, 2.94, 2.90, 3.00, 2.84, 2.80],
+      Shipping:  [2.62, 2.58, 2.68, 2.82, 2.64, 2.56, 2.52, 2.48, 2.44, 2.46, 2.38, 2.34],
+      Packaging: [0.55, 0.55, 0.56, 0.58, 0.55, 0.55, 0.54, 0.54, 0.53, 0.55, 0.53, 0.52],
+      Overhead:  [0.83, 0.83, 0.83, 0.83, 0.83, 0.83, 0.84, 0.83, 0.83, 0.83, 0.83, 0.83],
+    },
+    inventoryTurns: [5.6, 5.7, 5.5, 5.2, 5.8, 5.9, 6.0, 6.1, 6.2, 6.1, 6.4, 6.5],
+    stockoutPct: [2.8, 2.6, 3.1, 4.2, 2.9, 2.5, 2.4, 2.2, 2.1, 2.3, 1.9, 1.8],
+    defectPct: [1.9, 1.8, 2.0, 2.4, 1.9, 1.8, 1.7, 1.6, 1.6, 1.7, 1.5, 1.4],
+    warehouseOtifHeat: {
+      rows: ["Reno, NV", "Columbus, OH", "Allentown, PA"],
+      values: [
+        [93.5, 93.8, 93.2, 92.0, 94.1, 94.5, 95.0, 95.4, 95.9, 96.2, 96.6, 97.0],
+        [92.0, 92.3, 91.6, 90.4, 92.7, 93.0, 93.6, 93.9, 94.4, 94.7, 95.1, 95.6],
+        [90.8, 91.1, 90.5, 89.2, 91.8, 92.1, 92.7, 93.0, 93.5, 90.2, 94.1, 94.7],
+      ],
+    },
+    inventoryByCategory: [
+      { category: "Apparel", daysOnHand: 52, stockoutPct: 1.4, agedPct: 8.2, turns: 7.0 },
+      { category: "Footwear", daysOnHand: 68, stockoutPct: 2.6, agedPct: 14.6, turns: 5.4 },
+      { category: "Accessories", daysOnHand: 41, stockoutPct: 1.1, agedPct: 5.8, turns: 8.9 },
+    ],
+    laborDetail: [
+      { site: "Reno, NV", uph: 34.2, overtimePct: 4.1, headcount: 46 },
+      { site: "Columbus, OH", uph: 31.8, overtimePct: 6.8, headcount: 58 },
+      { site: "Allentown, PA", uph: 29.4, overtimePct: 9.6, headcount: 51 },
+    ],
+    returnReasons: [
+      { reason: "Size / fit", sharePct: 38, momPts: -2 },
+      { reason: "Changed mind", sharePct: 22, momPts: 1 },
+      { reason: "Damaged in transit", sharePct: 14, momPts: -1 },
+      { reason: "Quality issue", sharePct: 12, momPts: 0 },
+      { reason: "Wrong item shipped", sharePct: 8, momPts: -1 },
+      { reason: "Other", sharePct: 6, momPts: 3 },
+    ],
+  },
+
   marketing: {
     sessionsByChannel: {
       "Organic":   [48.2, 49.1, 52.4, 58.9, 50.2, 51.8, 54.1, 55.6, 57.2, 58.8, 60.1, 62.4],

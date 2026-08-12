@@ -16,6 +16,7 @@
       <a href="finance.html" class="active">Finance</a>
       <a href="marketing.html">Marketing</a>
       <a href="../reports/weekly.html">Weekly report</a>
+      <a href="../reports/monthly-ops.html">Monthly ops</a>
       <a href="../chatbot.html">AI assistant</a>
     </nav>
   </header>
@@ -106,8 +107,8 @@
   });
 
   Charts.lineChart(document.getElementById("c-margin"), {
-    labels: months, areaFill: true,
-    series: [{ name: "Gross margin %", color: 3, values: F.grossMarginPct }],
+    labels: months, areaFill: true, decimals: 1, suffix: "%", yMin: "auto",
+    series: [{ name: "Gross margin", color: 3, values: F.grossMarginPct }],
   });
 
   Charts.barChart(document.getElementById("c-opex"), {

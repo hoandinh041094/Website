@@ -16,6 +16,7 @@
       <a href="../dashboards/finance.html">Finance</a>
       <a href="../dashboards/marketing.html">Marketing</a>
       <a href="weekly.html" class="active">Weekly report</a>
+      <a href="monthly-ops.html">Monthly ops</a>
       <a href="../chatbot.html">AI assistant</a>
     </nav>
   </header>
@@ -271,12 +272,12 @@
 
   // §2 operations
   Charts.lineChart(document.getElementById("c-ontime"), {
-    labels: W.weeks, height: 220,
-    series: [{ name: "On-time %", color: 3, values: W.onTimePct }],
+    labels: W.weeks, height: 220, decimals: 1, suffix: "%", yMin: "auto",
+    series: [{ name: "On-time", color: 3, values: W.onTimePct }],
   });
   Charts.lineChart(document.getElementById("c-returns"), {
-    labels: W.weeks, height: 220,
-    series: [{ name: "Returns %", color: 2, values: W.returnsPct }],
+    labels: W.weeks, height: 220, decimals: 1, suffix: "%", yMin: "auto",
+    series: [{ name: "Returns", color: 2, values: W.returnsPct }],
   });
   document.querySelector("#t-warehouse tbody").innerHTML = W.warehouseDetail.map(w => `
     <tr><td>${w.site}</td>

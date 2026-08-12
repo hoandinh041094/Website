@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monthly Operations Review — Sightcraft Analytics demo</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="nav">
+    <a class="brand" href="../index.html">Sightcraft<span>&nbsp;Analytics</span></a>
+    <nav>
+      <a href="../dashboards/sales.html">Sales</a>
+      <a href="../dashboards/finance.html">Finance</a>
+      <a href="../dashboards/marketing.html">Marketing</a>
+      <a href="weekly.html">Weekly report</a>
+      <a href="monthly-ops.html" class="active">Monthly ops</a>
+      <a href="../chatbot.html">AI assistant</a>
+    </nav>
+  </header>
+
+  <div style="padding-top:28px">
+    <div class="kicker">Demo build · Northwind Outfitters (fictional) · Prepared for operations leadership</div>
+    <div class="report-title">Monthly Operations Review</div>
+    <div class="report-sub">August 2026 · Compared to July and trailing 12 months
+      · Delivered the first business day of each month</div>
+    <div class="rule"></div>
+    <div class="rule-thin"></div>
+  </div>
+
+  <!-- ================================================= executive summary -->
+  <div class="exec-summary">
+    <div class="kicker" style="margin-bottom:10px">Executive summary</div>
+    <p><strong>The best operating month on record, with one flag.</strong>
+    On-time-in-full reached <strong>95.8%</strong> (+0.5pt vs. July) and cost per
+    order fell for the sixth straight month to <strong>$6.49</strong> — down 15%
+    from the December peak. The network has fully absorbed the June conveyor
+    outage at Allentown, and average time-to-ship is at a 12-month low of 21
+    hours.</p>
+    <p>The flag is <strong>footwear inventory</strong>: 68 days on hand and 14.6%
+    of units aged past 90 days — both worst in the portfolio — while East-region
+    footwear demand stays soft. Holding through the fall reset risks a markdown
+    bill in Q4; rebalancing now costs far less. Labor is the other gap worth
+    attention: Allentown runs 14% below Reno on units per hour and carries 9.6%
+    overtime, the network's highest.</p>
+    <div class="exec-cols">
+      <div>
+        <h4>Working</h4>
+        <ul>
+          <li><strong>OTIF 95.8%:</strong> record high; every site improved in July–August.</li>
+          <li><strong>Cost per order $6.49:</strong> six consecutive down months; labor and shipping both trending down.</li>
+          <li><strong>Defect rate 1.4%:</strong> best on record; damaged-in-transit share down again.</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Needs attention</h4>
+        <ul>
+          <li><strong>Footwear inventory:</strong> 68 days on hand, 14.6% aged &gt;90 days (see §2 drill-down).</li>
+          <li><strong>Allentown labor:</strong> 29.4 UPH vs. Reno's 34.2; overtime 9.6% and rising.</li>
+          <li><strong>December readiness:</strong> last holiday cost +$1.12/order and −3.2pts OTIF — peak plan due September.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================================================== headline KPIs -->
+  <div class="grid grid-4" style="margin-bottom:8px">
+    <div class="tile" id="k1"></div>
+    <div class="tile" id="k2"></div>
+    <div class="tile" id="k3"></div>
+    <div class="tile" id="k4"></div>
+  </div>
+
+  <!-- ===================================================== fulfillment -->
+  <div class="report-section">
+    <div class="sec-head"><span class="sec-num">§1</span><h2>Fulfillment &amp; delivery</h2></div>
+    <p class="sec-lede"><strong>OTIF 95.8%, time-to-ship 21 hours — both records.</strong>
+    The December trough (90.6%) and the June Allentown outage are the only blemishes
+    on the year. Note the recovery slope after each: roughly five weeks to baseline,
+    which is the number the peak-season plan should assume.</p>
+    <div class="grid grid-2">
+      <div class="chart-card">
+        <h3>On-time-in-full</h3>
+        <div class="chart-sub">Percent of orders complete and on time, monthly</div>
+        <div id="c-otif"></div>
+      </div>
+      <div class="chart-card">
+        <h3>Average time to ship</h3>
+        <div class="chart-sub">Hours from order to carrier scan, monthly</div>
+        <div id="c-ship"></div>
+      </div>
+    </div>
+
+    <details class="drill">
+      <summary>Layer down: OTIF by warehouse, by month <span class="hint">3 sites × 12 months</span></summary>
+      <div class="drill-body">
+        <div class="chart-sub">Darker is better · hover any cell for the exact value</div>
+        <div id="c-otif-heat"></div>
+        <p style="font-size:.85rem;color:var(--muted);margin:10px 0 0">
+        The two visible cold spots are December (all sites, holiday volume) and
+        Allentown's June outage. Allentown has trailed the network in all 12
+        months — its gap to Reno averages 2.4pts, which is structural (layout and
+        conveyor age), not seasonal.</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- ======================================================= inventory -->
+  <div class="report-section">
+    <div class="sec-head"><span class="sec-num">§2</span><h2>Inventory</h2></div>
+    <p class="sec-lede"><strong>Turns at 6.5, stockouts at 1.8% — both the best of
+    the year.</strong> Aggregate inventory is the healthiest it has been; the
+    problem is concentration. One category holds most of the risk.</p>
+    <div class="grid grid-2">
+      <div class="chart-card">
+        <h3>Inventory turns</h3>
+        <div class="chart-sub">Annualized, monthly</div>
+        <div id="c-turns"></div>
+      </div>
+      <div class="chart-card">
+        <h3>Stockout rate</h3>
+        <div class="chart-sub">Percent of SKUs out of stock, monthly</div>
+        <div id="c-stockout"></div>
+      </div>
+    </div>
+
+    <details class="drill">
+      <summary>Layer down: inventory health by category <span class="hint">days on hand · stockouts · aged stock</span></summary>
+      <div class="drill-body">
+        <div class="table-scroll">
+          <table class="data-table" id="t-inventory">
+            <thead><tr>
+              <th>Category</th><th class="num">Days on hand</th><th class="num">Turns</th>
+              <th class="num">Stockout %</th><th class="num">Aged &gt;90 days</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p style="font-size:.85rem;color:var(--muted);margin:10px 0 0">
+        Footwear is the outlier on every column — and its aged share (14.6%) maps
+        directly to the East-region softness flagged in the weekly reviews. The
+        aged units are concentrated in 14 SKUs; action 1 proposes moving them
+        before the fall reset rather than marking them down in Q4.</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- ============================================================ cost -->
+  <div class="report-section">
+    <div class="sec-head"><span class="sec-num">§3</span><h2>Cost per order</h2></div>
+    <p class="sec-lede"><strong>$6.49, down from $7.61 in December.</strong> Every
+    component fell or held: labor −6% since March on batching improvements,
+    shipping −7% from the carrier renegotiation, packaging flat, overhead flat.</p>
+    <div class="chart-card">
+      <h3>Cost per order by component</h3>
+      <div class="chart-sub">$ per order, monthly, stacked</div>
+      <div id="c-cost"></div>
+    </div>
+
+    <details class="drill">
+      <summary>Layer down: labor productivity by site <span class="hint">UPH · overtime · headcount</span></summary>
+      <div class="drill-body">
+        <div class="table-scroll">
+          <table class="data-table" id="t-labor">
+            <thead><tr>
+              <th>Warehouse</th><th class="num">Units per hour</th>
+              <th class="num">Overtime %</th><th class="num">Headcount</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p style="font-size:.85rem;color:var(--muted);margin:10px 0 0">
+        Closing half of Allentown's UPH gap to Reno is worth roughly $0.18 per
+        order network-wide — more than the next carrier negotiation. The
+        overtime pattern says it's a staffing-shape problem (weekend coverage),
+        not effort.</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- ========================================================= quality -->
+  <div class="report-section">
+    <div class="sec-head"><span class="sec-num">§4</span><h2>Quality &amp; returns</h2></div>
+    <p class="sec-lede"><strong>Order defect rate 1.4% — a record low.</strong>
+    The dimensional-packaging change (April) keeps paying off: damaged-in-transit
+    share of returns is down to 14% from 19% a year ago.</p>
+    <div class="chart-card">
+      <h3>Order defect rate</h3>
+      <div class="chart-sub">Defects as percent of orders shipped, monthly</div>
+      <div id="c-defect"></div>
+    </div>
+
+    <details class="drill">
+      <summary>Layer down: return reasons <span class="hint">share of returns · change vs. July</span></summary>
+      <div class="drill-body">
+        <div class="table-scroll">
+          <table class="data-table" id="t-reasons">
+            <thead><tr>
+              <th>Reason</th><th class="num">Share of returns</th><th class="num">vs. July</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p style="font-size:.85rem;color:var(--muted);margin:10px 0 0">
+        Size/fit remains the biggest bucket (38%) but fell 2pts after the new
+        size-guide rollout. The "Other" bucket jumped 3pts — worth a tagging
+        audit before it hides a real signal.</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- ========================================================== actions -->
+  <div class="report-section">
+    <div class="sec-head"><span class="sec-num">§5</span><h2>Recommended actions</h2></div>
+    <div class="card" style="margin-top:14px">
+      <ol class="actions-list">
+        <li><div class="act-body"><strong>Rebalance footwear inventory before the
+          fall reset.</strong> Transfer the 14 aged SKU concentrations from East
+          to West (where sell-through supports full price). Estimated cost $8K in
+          freight vs. an estimated $45–60K Q4 markdown exposure if held.</div></li>
+        <li><div class="act-body"><strong>Fix Allentown's staffing shape, not its
+          headcount.</strong> Shift 6 FTEs to a weekend crew to cut the 9.6%
+          overtime and close half the UPH gap — modeled at $0.18/order
+          network-wide, ~$14K/month at current volume.</div></li>
+        <li><div class="act-body"><strong>Lock the peak-season plan by September 15.</strong>
+          Assume December costs +$1.12/order and −3.2pts OTIF as the baseline
+          (last year's actuals), then buy it down: temp-labor contracts signed by
+          early October beat spot rates by ~18%.</div></li>
+      </ol>
+    </div>
+  </div>
+
+  <footer>
+    <div class="foot-grid">
+      <div>Demo report — all data fictional. In a client build this is generated
+        automatically every month from your systems.
+        <a href="../index.html#contact">Want yours?</a></div>
+      <div>© 2026 Sightcraft Analytics</div>
+    </div>
+  </footer>
+
+</div>
+
+<script src="../assets/charts.js"></script>
+<script src="../assets/data.js"></script>
+<script>
+  const O = DATA.monthlyOps;
+  const months = DATA.months;
+
+  // headline KPIs
+  Charts.statTile(document.getElementById("k1"), {
+    label: "On-time-in-full", value: "95.8%", delta: 0.5, deltaLabel: "pts vs Jul",
+    spark: O.otifPct });
+  Charts.statTile(document.getElementById("k2"), {
+    label: "Cost per order", value: "$6.49", delta: -1.4, upIsGood: false, deltaLabel: "vs Jul",
+    spark: months.map((_, i) => Object.values(O.costPerOrder).reduce((a, s) => a + s[i], 0)) });
+  Charts.statTile(document.getElementById("k3"), {
+    label: "Inventory turns", value: "6.5", delta: 1.6, deltaLabel: "vs Jul",
+    spark: O.inventoryTurns });
+  Charts.statTile(document.getElementById("k4"), {
+    label: "Order defect rate", value: "1.4%", delta: -0.1, upIsGood: false,
+    deltaLabel: "pts vs Jul", spark: O.defectPct });
+
+  // §1 fulfillment
+  Charts.lineChart(document.getElementById("c-otif"), {
+    labels: months, height: 220, decimals: 1, suffix: "%", yMin: "auto",
+    series: [{ name: "OTIF", color: 3, values: O.otifPct }],
+  });
+  Charts.lineChart(document.getElementById("c-ship"), {
+    labels: months, height: 220, yMin: "auto",
+    series: [{ name: "Hours to ship", color: 1, values: O.shipHours }],
+  });
+  Charts.heatmap(document.getElementById("c-otif-heat"), {
+    rows: O.warehouseOtifHeat.rows, cols: months,
+    values: O.warehouseOtifHeat.values, fmt: (v) => v.toFixed(1) + "%",
+  });
+
+  // §2 inventory
+  Charts.lineChart(document.getElementById("c-turns"), {
+    labels: months, height: 220, decimals: 1, yMin: "auto",
+    series: [{ name: "Turns", color: 1, values: O.inventoryTurns }],
+  });
+  Charts.lineChart(document.getElementById("c-stockout"), {
+    labels: months, height: 220, decimals: 1, suffix: "%", yMin: "auto",
+    series: [{ name: "Stockout rate", color: 2, values: O.stockoutPct }],
+  });
+  document.querySelector("#t-inventory tbody").innerHTML = O.inventoryByCategory.map(c => `
+    <tr><td>${c.category}</td>
+      <td class="num ${c.daysOnHand > 60 ? "neg" : ""}">${c.daysOnHand}</td>
+      <td class="num">${c.turns.toFixed(1)}</td>
+      <td class="num ${c.stockoutPct > 2 ? "neg" : ""}">${c.stockoutPct.toFixed(1)}%</td>
+      <td class="num ${c.agedPct > 10 ? "neg" : "pos"}">${c.agedPct.toFixed(1)}%</td></tr>`).join("");
+
+  // §3 cost
+  Charts.barChart(document.getElementById("c-cost"), {
+    labels: months, stacked: true, prefix: "$", decimals: 2, height: 260,
+    series: Object.entries(O.costPerOrder).map(([name, values], i) =>
+      ({ name, color: i + 1, values })),
+  });
+  document.querySelector("#t-labor tbody").innerHTML = O.laborDetail.map(l => `
+    <tr><td>${l.site}</td>
+      <td class="num ${l.uph >= 34 ? "pos" : l.uph < 30 ? "neg" : ""}">${l.uph.toFixed(1)}</td>
+      <td class="num ${l.overtimePct > 8 ? "neg" : ""}">${l.overtimePct.toFixed(1)}%</td>
+      <td class="num">${l.headcount}</td></tr>`).join("");
+
+  // §4 quality
+  Charts.lineChart(document.getElementById("c-defect"), {
+    labels: months, height: 220, decimals: 1, suffix: "%", yMin: "auto",
+    series: [{ name: "Defect rate", color: 8, values: O.defectPct }],
+  });
+  document.querySelector("#t-reasons tbody").innerHTML = O.returnReasons.map(r => `
+    <tr><td>${r.reason}</td>
+      <td class="num">${r.sharePct}%</td>
+      <td class="num ${r.momPts < 0 ? "pos" : r.momPts > 1 ? "neg" : ""}">${r.momPts > 0 ? "+" : ""}${r.momPts}pt</td></tr>`).join("");
+</script>
+</body>
+</html>

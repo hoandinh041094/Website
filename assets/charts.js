@@ -10,25 +10,36 @@ const Charts = (() => {
   const slot = (n) => css(`--s${n}`);
 
   // ---------------------------------------------------------- formatting
-  function fmtCompact(v, prefix = "") {
+  function fmtCompact(v, prefix = "", dp = 0) {
     const a = Math.abs(v);
     if (a >= 1e6) return `${prefix}${(v / 1e6).toFixed(1).replace(/\.0$/, "")}M`;
     if (a >= 1e3) return `${prefix}${(v / 1e3).toFixed(1).replace(/\.0$/, "")}K`;
-    return `${prefix}${Math.round(v).toLocaleString()}`;
+    return `${prefix}${v.toFixed(dp)}`;
   }
-  function fmtFull(v, prefix = "") {
-    return `${prefix}${Math.round(v).toLocaleString()}`;
+  function fmtFull(v, prefix = "", dp = 0) {
+    return `${prefix}${v.toLocaleString(undefined,
+      { minimumFractionDigits: dp, maximumFractionDigits: dp })}`;
   }
 
   // clean axis ticks: 0 / 1,000 / 2,000 …
-  function niceTicks(max, count = 4) {
-    const raw = max / count;
+  function niceStep(raw) {
     const mag = Math.pow(10, Math.floor(Math.log10(raw)));
     const norm = raw / mag;
-    const step = (norm <= 1 ? 1 : norm <= 2 ? 2 : norm <= 5 ? 5 : 10) * mag;
+    return (norm <= 1 ? 1 : norm <= 2 ? 2 : norm <= 5 ? 5 : 10) * mag;
+  }
+  function niceTicks(max, count = 4, lo = 0) {
+    const step = niceStep((max - lo) / count);
+    const start = Math.floor(lo / step) * step;
     const ticks = [];
-    for (let t = 0; t <= max + step * 0.999; t += step) ticks.push(t);
+    for (let t = start; t <= max + step * 0.999; t += step) ticks.push(+t.toFixed(6));
     return ticks;
+  }
+  // padded floor for narrow-range series (yMin: "auto")
+  function autoFloor(min, max) {
+    const span = (max - min) || Math.abs(max) * 0.1 || 1;
+    const step = niceStep(span / 3);
+    const lo = Math.floor((min - span * 0.08) / step) * step;
+    return min >= 0 ? Math.max(0, lo) : lo;
   }
 
   // ------------------------------------------------------------ tooltip
@@ -110,19 +121,23 @@ const Charts = (() => {
   // cfg: {labels, series:[{name, color(slot#), values}], height, prefix, areaFill}
   function lineChart(el, cfg) {
     const render = () => {
-      const { labels, series, height = 260, prefix = "", areaFill = false } = cfg;
+      const { labels, series, height = 260, prefix = "", areaFill = false,
+              decimals = 0, suffix = "", yMin = 0 } = cfg;
       const W = 720, H = height;
       const pad = { l: 46, r: 14, t: 12, b: 26 };
       const iw = W - pad.l - pad.r, ih = H - pad.t - pad.b;
-      const max = Math.max(...series.flatMap(s => s.values));
-      const ticks = niceTicks(max);
+      const allV = series.flatMap(s => s.values);
+      const max = Math.max(...allV);
+      const lo = yMin === "auto" ? autoFloor(Math.min(...allV), max) : yMin;
+      const ticks = niceTicks(max, 4, lo);
       const top = ticks[ticks.length - 1];
+      const bottom = ticks[0];
       const x = (i) => pad.l + (i / (labels.length - 1)) * iw;
-      const y = (v) => pad.t + ih - (v / top) * ih;
+      const y = (v) => pad.t + ih - ((v - bottom) / (top - bottom)) * ih;
 
       const grid = ticks.map(t => `
         <line x1="${pad.l}" y1="${y(t)}" x2="${W - pad.r}" y2="${y(t)}" stroke="${css("--grid")}" stroke-width="1"/>
-        <text x="${pad.l - 8}" y="${y(t) + 4}" text-anchor="end" font-size="11" fill="${css("--muted")}">${fmtCompact(t, prefix)}</text>`).join("");
+        <text x="${pad.l - 8}" y="${y(t) + 4}" text-anchor="end" font-size="11" fill="${css("--muted")}">${fmtCompact(t, prefix, decimals)}${suffix}</text>`).join("");
 
       const everyN = Math.ceil(labels.length / 12);
       const xLabels = labels.map((l, i) => i % everyN ? "" : `
@@ -131,7 +146,7 @@ const Charts = (() => {
       const paths = series.map(s => {
         const c = slot(s.color);
         const d = s.values.map((v, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join("");
-        const area = areaFill ? `<path d="${d} L${x(s.values.length - 1)},${y(0)} L${x(0)},${y(0)} Z" fill="${c}" opacity="0.1"/>` : "";
+        const area = areaFill ? `<path d="${d} L${x(s.values.length - 1)},${y(bottom)} L${x(0)},${y(bottom)} Z" fill="${c}" opacity="0.1"/>` : "";
         const [ex, ey] = [x(s.values.length - 1), y(s.values[s.values.length - 1])];
         return `${area}<path d="${d}" fill="none" stroke="${c}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
           <circle cx="${ex}" cy="${ey}" r="4" fill="${c}" stroke="${css("--surface")}" stroke-width="2"/>`;
@@ -140,12 +155,12 @@ const Charts = (() => {
       // direct label on the last point of the leading series only (selective)
       const lead = series[0];
       const endLabel = `<text x="${x(lead.values.length - 1) - 8}" y="${y(lead.values[lead.values.length - 1]) - 10}"
-        text-anchor="end" font-size="11" font-weight="600" fill="${css("--ink")}">${fmtCompact(lead.values[lead.values.length - 1], prefix)}</text>`;
+        text-anchor="end" font-size="11" font-weight="600" fill="${css("--ink")}">${fmtCompact(lead.values[lead.values.length - 1], prefix, decimals)}${suffix}</text>`;
 
       el.innerHTML = `${legendHTML(series)}
         <svg viewBox="0 0 ${W} ${H}" role="img">
           ${grid}
-          <line x1="${pad.l}" y1="${y(0)}" x2="${W - pad.r}" y2="${y(0)}" stroke="${css("--baseline")}" stroke-width="1"/>
+          <line x1="${pad.l}" y1="${y(bottom)}" x2="${W - pad.r}" y2="${y(bottom)}" stroke="${css("--baseline")}" stroke-width="1"/>
           ${xLabels}${paths}${endLabel}
           <line id="xh" x1="0" y1="${pad.t}" x2="0" y2="${pad.t + ih}" stroke="${css("--baseline")}" stroke-width="1" visibility="hidden"/>
           <rect x="${pad.l}" y="${pad.t}" width="${iw}" height="${ih}" fill="transparent"/>
@@ -162,7 +177,7 @@ const Charts = (() => {
         hair.setAttribute("x1", x(i)); hair.setAttribute("x2", x(i));
         hair.setAttribute("visibility", "visible");
         showTip(tipRows(labels[i], series.map(s => ({
-          name: s.name, color: slot(s.color), value: fmtFull(s.values[i], prefix)
+          name: s.name, color: slot(s.color), value: fmtFull(s.values[i], prefix, decimals) + suffix
         }))), e.clientX, e.clientY);
       });
       hit.addEventListener("mouseleave", () => { hair.setAttribute("visibility", "hidden"); hideTip(); });
@@ -175,7 +190,8 @@ const Charts = (() => {
   // cfg: {labels, series:[{name,color,values}], stacked, height, prefix}
   function barChart(el, cfg) {
     const render = () => {
-      const { labels, series, stacked = false, height = 260, prefix = "" } = cfg;
+      const { labels, series, stacked = false, height = 260, prefix = "",
+              decimals = 0, suffix = "" } = cfg;
       const W = 720, H = height;
       const pad = { l: 46, r: 14, t: 12, b: 26 };
       const iw = W - pad.l - pad.r, ih = H - pad.t - pad.b;
@@ -189,7 +205,7 @@ const Charts = (() => {
 
       const grid = ticks.map(t => `
         <line x1="${pad.l}" y1="${y(t)}" x2="${W - pad.r}" y2="${y(t)}" stroke="${css("--grid")}" stroke-width="1"/>
-        <text x="${pad.l - 8}" y="${y(t) + 4}" text-anchor="end" font-size="11" fill="${css("--muted")}">${fmtCompact(t, prefix)}</text>`).join("");
+        <text x="${pad.l - 8}" y="${y(t) + 4}" text-anchor="end" font-size="11" fill="${css("--muted")}">${fmtCompact(t, prefix)}${suffix}</text>`).join("");
 
       const xLabels = labels.map((l, i) => `
         <text x="${pad.l + band * (i + 0.5)}" y="${H - 8}" text-anchor="middle" font-size="11" fill="${css("--muted")}">${l}</text>`).join("");
@@ -240,9 +256,9 @@ const Charts = (() => {
       el.querySelectorAll(".hit").forEach(r => {
         r.addEventListener("mousemove", (e) => {
           const i = +r.dataset.i;
-          const rows = series.map(s => ({ name: s.name, color: slot(s.color), value: fmtFull(s.values[i], prefix) }));
+          const rows = series.map(s => ({ name: s.name, color: slot(s.color), value: fmtFull(s.values[i], prefix, decimals) + suffix }));
           if (stacked && series.length > 1) {
-            rows.push({ name: "Total", value: fmtFull(series.reduce((a, s) => a + s.values[i], 0), prefix) });
+            rows.push({ name: "Total", value: fmtFull(series.reduce((a, s) => a + s.values[i], 0), prefix, decimals) + suffix });
           }
           showTip(tipRows(labels[i], rows), e.clientX, e.clientY);
         });
