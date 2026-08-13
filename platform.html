@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How the platform works — Sightcraft Analytics</title>
+<meta name="description" content="A plain-language look at how Sightcraft Analytics connects to your business tools, keeps your data isolated and secure, and turns it into a dashboard — no technical background required.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="wrap">
+
+  <header class="nav">
+    <a class="brand" href="index.html">Sightcraft<span>&nbsp;Analytics</span></a>
+    <nav>
+      <a href="index.html#services">Services</a>
+      <a href="index.html#showcase">Demo dashboards</a>
+      <a href="platform.html" class="active">Platform</a>
+      <a href="chatbot.html">AI assistant</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+  </header>
+
+  <div style="padding-top:28px">
+    <div class="kicker">Platform · Security</div>
+    <div class="report-title">How your data becomes a dashboard</div>
+    <div class="report-sub">No engineering background required — here's exactly
+      what happens between "you connect a tool" and "you have a dashboard,"
+      in plain language.</div>
+    <div class="rule"></div>
+    <div class="rule-thin"></div>
+  </div>
+
+  <section style="padding-top:24px">
+    <p style="font-size:1.02rem; color:var(--ink-2); max-width:720px; line-height:1.65">
+    You shouldn't have to trust a black box with your sales and customer data.
+    So instead of asking you to take our word for it, here's the actual path
+    your data takes — from the systems you already use, to the dashboard you
+    open every morning.</p>
+  </section>
+
+  <section>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-n">1</div>
+        <h3>You connect your tools</h3>
+        <p>You link the systems you already run — your point of sale, your
+        online store, your accounting software, your CRM — through each
+        tool's own secure login screen. The same kind of "Connect with
+        Google" flow you already trust elsewhere. We never see or store
+        your passwords, and we never touch your database directly — only
+        what you've explicitly approved.</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-n">2</div>
+        <h3>We sync it automatically</h3>
+        <p>Every day, a scheduled job checks each connected tool for
+        anything new or changed, pulls it in, and reshapes it into one
+        clean, consistent format. No manual exports, no spreadsheets
+        emailed back and forth.</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-n">3</div>
+        <h3>We do the analysis for you</h3>
+        <p>Trends, comparisons, forecasts, and anomaly checks are computed
+        ahead of time and stored — before you ever open the dashboard. That's
+        the difference between a dashboard that thinks in front of you
+        (slow, and someone has to know what to ask for) and one that already
+        knows the answer.</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-n">4</div>
+        <h3>Your data is walled off — twice</h3>
+        <p>Every business's data lives in its own secure space, enforced at
+        the database level, not only in our application's code. Even in the
+        event of a bug in our app, the database itself refuses to let one
+        client see another client's numbers. That two-layer approach is
+        called <em>defense in depth</em> — the same principle banks use.</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="flow-n">5</div>
+        <h3>You just open a link</h3>
+        <p>No software to install, no new logins to manage, works on any
+        device. If you can open a bookmark, you can use your dashboard.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <div class="kicker">Why it matters</div>
+      <h2>What this means for a small business, specifically</h2>
+      <p>Every choice above maps to a reason big-company BI tools don't
+      work for a 12-person retailer or a regional service business.</p>
+    </div>
+    <div class="grid grid-4">
+      <div class="card">
+        <span class="tag">No hiring</span>
+        <h3>You don't need a data team</h3>
+        <p>The analysis step — trends, forecasts, "why did this change" —
+        is done for you, on a schedule. You're not handed a tool and told
+        to figure it out.</p>
+      </div>
+      <div class="card">
+        <span class="tag">No training</span>
+        <h3>Nothing new to learn</h3>
+        <p>Dashboards and reports arrive as links and emails. There's no BI
+        platform to onboard your team onto.</p>
+      </div>
+      <div class="card">
+        <span class="tag">No excuses</span>
+        <h3>Bank-grade isolation, SMB pricing</h3>
+        <p>The same database-level tenant isolation an enterprise platform
+        uses — you're not getting a stripped-down version of security
+        because you're a smaller account.</p>
+      </div>
+      <div class="card">
+        <span class="tag">No rebuilds</span>
+        <h3>It grows with you</h3>
+        <p>Switch point-of-sale systems or add a new tool later, and we
+        reconnect the source — your historical dashboards keep working.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <div class="kicker">Common questions</div>
+      <h2>What business owners actually ask us</h2>
+    </div>
+
+    <details class="drill">
+      <summary>Do you ever see or store my passwords?</summary>
+      <div class="drill-body">
+        <p style="padding-top:12px">No. Every connection uses that tool's own
+        official login and permission screen (OAuth) — the same standard
+        behind "Sign in with Google" or "Connect to Slack." We receive a
+        limited, revocable access token, never your credentials, and you can
+        revoke it at any time from the source tool itself.</p>
+      </div>
+    </details>
+    <details class="drill">
+      <summary>Can other clients see my data?</summary>
+      <div class="drill-body">
+        <p style="padding-top:12px">No. Isolation is enforced at the database
+        level (Postgres row-level security), not just in application code. A
+        bug in our app logic still can't leak data across clients, because the
+        database itself rejects the query — that's the "walled off twice"
+        step above.</p>
+      </div>
+    </details>
+    <details class="drill">
+      <summary>What if I switch point-of-sale or accounting systems?</summary>
+      <div class="drill-body">
+        <p style="padding-top:12px">Tell us and we reconnect the new source.
+        Your historical data and dashboards stay intact — we map the new
+        system's data into the same normalized schema the old one used.</p>
+      </div>
+    </details>
+    <details class="drill">
+      <summary>How often does my data update?</summary>
+      <div class="drill-body">
+        <p style="padding-top:12px">Daily by default, on a schedule that runs
+        overnight so your numbers are ready when you sit down in the morning.
+        If your business needs same-day or hourly numbers, that's available
+        too — it's a configuration change, not a rebuild.</p>
+      </div>
+    </details>
+    <details class="drill">
+      <summary>Do I need any technical skills to use this?</summary>
+      <div class="drill-body">
+        <p style="padding-top:12px">No. You get a link. If you can open a
+        website, you can use your dashboard — no installs, no logins beyond
+        your own, no training session required.</p>
+      </div>
+    </details>
+  </section>
+
+  <section>
+    <div class="card" style="padding:32px; text-align:center">
+      <div class="kicker">Get started</div>
+      <h2 style="margin:8px 0 10px">Want to see this built around your data?</h2>
+      <p style="color:var(--ink-2); max-width:520px; margin:0 auto 20px">
+      We'll map out exactly which of your tools connect and what your first
+      dashboard looks like — no cost, no commitment.</p>
+      <a class="btn btn-primary" href="index.html#contact">Book a free consult</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="foot-grid">
+      <div>Read how the platform is built. <a href="index.html#showcase">See the demo dashboards →</a></div>
+      <div>© 2026 Sightcraft Analytics</div>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>

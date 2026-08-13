@@ -365,6 +365,25 @@ details.drill .drill-body .chart-sub { color: var(--muted); font-size: .8rem; ma
   .glossary-card dd { margin-bottom: 6px; }
 }
 
+/* ------------------------------------------------------- platform flow */
+.flow { display: flex; align-items: stretch; gap: 0; margin: 24px 0; }
+.flow-step {
+  flex: 1; min-width: 0; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 20px 18px;
+}
+.flow-step .flow-n {
+  width: 30px; height: 30px; border-radius: 50%; background: var(--ink); color: var(--bg);
+  display: flex; align-items: center; justify-content: center; font-weight: 700;
+  font-size: .9rem; margin-bottom: 12px;
+}
+.flow-step h3 { margin: 0 0 6px; font-size: 1rem; }
+.flow-step p { margin: 0; font-size: .85rem; color: var(--ink-2); line-height: 1.55; }
+.flow-arrow { flex: 0 0 28px; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 1.3rem; }
+@media (max-width: 980px) {
+  .flow { flex-direction: column; }
+  .flow-arrow { transform: rotate(90deg); padding: 6px 0; }
+}
+
 /* -------------------------------------------------------------- footer */
 footer {
   border-top: 1px solid var(--grid); margin-top: 40px;
